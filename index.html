@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#eaf2ff">
-<title>酵素實驗室 2.3｜分子吸附反應版</title>
+<title>酵素實驗室 2.4｜連續碰撞反應版</title>
 <style>
 :root{--ink:#172642;--muted:#64748b;--line:#dfe8f3;--bg:#f4f7fc;--white:#fff;--blue:#4263eb;--orange:#ef8b36;--green:#0d9c83;--red:#e65766;--navy:#254268;--shadow:0 12px 34px rgba(47,76,126,.08)}
 *{box-sizing:border-box}html,body{min-height:100%;margin:0}body{font-family:system-ui,-apple-system,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:var(--ink);background:var(--bg);-webkit-tap-highlight-color:transparent}button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #8da8ff;outline-offset:2px}button:disabled{opacity:.5;cursor:not-allowed} .shell{max-width:1650px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;padding:14px 17px;gap:12px}
@@ -175,7 +175,7 @@ input.ph-slider::-moz-range-thumb{height:15px;width:15px;background:#fff;border:
 <body>
 <div class="shell">
 <header>
- <div class="brand"><div class="logo" aria-hidden="true">🧪</div><div><h1>酵素實驗室 <span style="color:#5571de">2.3</span></h1></div></div>
+ <div class="brand"><div class="logo" aria-hidden="true">🧪</div><div><h1>酵素實驗室 <span style="color:#5571de">2.4</span></h1></div></div>
  <div class="tabs" role="tablist" aria-label="操作模式"><button id="modeFree" class="tab active" role="tab" aria-selected="true">✨ 自由探索</button><button id="modeCompare" class="tab" role="tab" aria-selected="false">⚖️ 雙組對照實驗</button></div>
  <button type="button" class="help-button" id="helpBtn" aria-label="說明">？</button>
 </header>
@@ -235,7 +235,7 @@ input.ph-slider::-moz-range-thumb{height:15px;width:15px;background:#fff;border:
 </div>
 <script>
 'use strict';
-/* 酵素實驗室 2.0：獨立、無第三方依賴的教學模型。所有數量均為相對單位。 */
+/* 酵素實驗室 2.4：獨立、無第三方依賴，持續運動與真正接觸結合的教學模型。 */
 const SPECIES={starch:{label:'澱粉',color:'#e65362',product:'較小的醣類',symbol:'澱',productSymbol:'醣',shape:'circle',enz:'saliva',prodColor:'#ffb1b5'},protein:{label:'蛋白質',color:'#4477db',product:'較短的胺基酸鏈',symbol:'蛋',productSymbol:'胺',shape:'triangle',enz:'pepsin',prodColor:'#aac6ff'},ammonia:{label:'氨',color:'#159b91',product:'尿素',symbol:'氨',productSymbol:'尿素',shape:'square',enz:'liver',prodColor:'#9be5d8'}};
 const SIM_DURATION=30, STANDARD_FINISH_TIME=25, SIM_SPEED=1.8;
 const ENZ={saliva:{label:'唾液澱粉酶',opt:7,phWidth:2.15,color:'#18a16f',species:'starch'},pepsin:{label:'胃蛋白酶',opt:2,phWidth:1.9,color:'#885cd4',species:'protein'},liver:{label:'肝臟多種酵素',opt:7,phWidth:2.4,color:'#16887b',species:'ammonia'}};
@@ -246,7 +246,7 @@ function temperatureFactor(t){return t<=37?(.11+.89*Math.exp((t-37)/15)):Math.ex
 function phFactor(key,ph){const e=ENZ[key];return Math.exp(-.5*Math.pow((ph-e.opt)/e.phWidth,2));}
 function activity(key,temp,ph,health){return cap(temperatureFactor(temp)*phFactor(key,ph)*health,0,1);}
 function heatDamagePerSecond(t){return t<=42?0:0.00022*Math.pow(t-42,1.65);}
-function newVessel(subs=['starch'],enzs=['saliva'],amount=1){return {sub:Object.fromEntries(subs.map(s=>[s,100*amount])),prod:Object.fromEntries(subs.map(s=>[s,0])),initial:Object.fromEntries(subs.map(s=>[s,100*amount])),enzs:[...enzs],health:{saliva:1,pepsin:1,liver:1},elapsed:0,history:[],lastSample:-1,visualEvents:[],visualAccumulator:Object.fromEntries(subs.map(s=>[s,0])),visualSequence:0};}
+function newVessel(subs=['starch'],enzs=['saliva'],amount=1){return {sub:Object.fromEntries(subs.map(s=>[s,100*amount])),prod:Object.fromEntries(subs.map(s=>[s,0])),initial:Object.fromEntries(subs.map(s=>[s,100*amount])),enzs:[...enzs],health:{saliva:1,pepsin:1,liver:1},elapsed:0,history:[],lastSample:-1,visual:null,visualCredit:Object.fromEntries(subs.map(s=>[s,0]))};}
 function getOptions(type){return [...$(type==='sub'?'subChecks':'enzChecks').querySelectorAll('input:checked')].map(x=>x.value)};
 const defaultFree=()=>({temp:37,ph:7,subAmount:1,enzAmount:1,subs:['starch'],enzs:['saliva']});
 let free=defaultFree();
@@ -262,16 +262,135 @@ function resetSim(){
  vessels.free=newVessel(free.subs,free.enzs,free.subAmount);
  const sub=ENZ[compare.pair].species; const mk=g=>newVessel([sub],[compare.pair],settingsFor(g).substrate);
  vessels.A=mk('A');vessels.B=mk('B');
+ for(const g of ['free','A','B'])initializeVisual(vessels[g],g);
  for(const g of ['free','A','B'])addSample(vessels[g],g,true);
  updateLocks();updateButton();refreshInfo();paint(true);
 }
 function adjustSubstrate(v,k,amount){const previous=v.initial[k]||0;const desired=100*amount;if(Math.abs(previous-desired)>1e-8){const delta=desired-previous;v.sub[k]=Math.max(0,(v.sub[k]||0)+delta);v.initial[k]=desired;}}
-function updateSelections(){if(experimentStarted)return;free.subs=getOptions('sub');free.enzs=getOptions('enz');const v=vessels.free;for(const k of Object.keys(v.sub)){if(!free.subs.includes(k)){delete v.sub[k];delete v.prod[k];delete v.initial[k];}}
-for(const k of free.subs){if(!(k in v.sub)){v.sub[k]=100*free.subAmount;v.prod[k]=0;v.initial[k]=100*free.subAmount;}}v.visualEvents=[];v.visualAccumulator=Object.fromEntries(free.subs.map(s=>[s,0]));v.visualSequence=0;
-v.enzs=[...free.enzs];v.history=[];v.lastSample=-1;addSample(v,'free',true);refreshInfo();paint(true);}
-// Each visual adsorption event represents a small packet of actual reacted substrate.
-// The graph and the binding animation therefore share the same reaction model.
-const DISPLAY_REACTION_QUANTUM=11.5;
+function updateSelections(){
+ if(experimentStarted)return;
+ free.subs=getOptions('sub');free.enzs=getOptions('enz');
+ // Set up one new experiment automatically; no stale particles from earlier choices.
+ resetSim();
+}
+/* Each real molecule is a persistent object with its own position and velocity.
+   No timeline-driven sine positions, and no synthetic particles entering from outside.
+   These visible particles are packets of molecules in a simplified teaching model. */
+const MOLECULE_PACKET=100/9;
+let nextParticleId=1;
+function pseudoRandom(seed){let v=(Math.sin(seed*78.233+12.9898)*43758.5453);return v-Math.floor(v);}
+function visualBounds(group){
+ const single=group==='free';
+ const x=single?23:17,w=single?184:136;
+ return {minX:x+23,maxX:x+w-23,minY:77,maxY:187,enzMaxX:x+w-42};
+}
+function spawnMoving(kind,s,x,y,speed){
+ const angle=2*Math.PI*pseudoRandom(nextParticleId*1.77+14);
+ return {id:nextParticleId++,kind,s,x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,bind:null};
+}
+function initializeVisual(v,group){
+ const b=visualBounds(group),molecules=[],enzymes=[];
+ const used=[];
+ const place=(radius)=>{
+  let x=0,y=0;
+  for(let attempt=0;attempt<42;attempt++){
+   x=b.minX+radius+pseudoRandom(nextParticleId*7.31+attempt*1.37)*(b.maxX-b.minX-2*radius);
+   y=b.minY+radius+pseudoRandom(nextParticleId*2.61+attempt*3.71)*(b.maxY-b.minY-2*radius);
+   if(used.every(q=>Math.hypot(q.x-x,q.y-y)>radius+q.r+2))break;
+  }
+  used.push({x,y,r:radius});
+  return {x,y};
+ };
+ const groupSettings=settingsFor(group);
+ for(const k of v.enzs){
+  for(let i=0;i<groupSettings.enzyme*2;i++){
+   const pos=place(14);pos.x=Math.min(pos.x,b.enzMaxX);
+   const en=spawnMoving('enz',k,pos.x,pos.y,7.5);
+   en.busy=null;en.key=k;enzymes.push(en);
+  }
+ }
+ for(const s of Object.keys(v.sub)){
+  const total=9*Math.round(v.initial[s]/100);
+  for(let i=0;i<total;i++){
+   const pos=place(8);
+   molecules.push(spawnMoving('sub',s,pos.x,pos.y,16+8*pseudoRandom(nextParticleId*3.33)));
+  }
+ }
+ v.visual={molecules,enzymes,conversions:0,bindingStarts:0,releaseCount:0};
+ v.visualCredit=Object.fromEntries(Object.keys(v.sub).map(k=>[k,0]));
+}
+function moveParticle(p,dt,b,mobility,radius=7){
+ p.x+=p.vx*dt*mobility;
+ p.y+=p.vy*dt*mobility;
+ if(p.x<b.minX+radius){p.x=b.minX+radius;p.vx=Math.abs(p.vx);}
+ if(p.x>b.maxX-radius){p.x=b.maxX-radius;p.vx=-Math.abs(p.vx);}
+ if(p.y<b.minY+radius){p.y=b.minY+radius;p.vy=Math.abs(p.vy);}
+ if(p.y>b.maxY-radius){p.y=b.maxY-radius;p.vy=-Math.abs(p.vy);}
+}
+function makeRelease(v,m,e){
+ const d=SPECIES[m.s],count=d.shape==='square'?1:2;
+ m.kind='prod';m.bind=null;
+ m.x=e.x+15;m.y=e.y;
+ m.vx=22;m.vy=count===2?-13:8;
+ for(let i=1;i<count;i++){
+  const extra=spawnMoving('prod',m.s,m.x,m.y,24);
+  extra.vx=21;extra.vy=13;
+  v.visual.molecules.push(extra);
+ }
+ e.busy=null;v.visual.releaseCount++;
+}
+function simulateVisual(v,group,dt){
+ if(!v.visual)return;
+ const p=settingsFor(group),b=visualBounds(group),scene=v.visual;
+ const mobility=.62+.78*cap(p.temp/50,0,1);
+ // The enzymes have physical positions and drift independently.
+ for(const e of scene.enzymes){if(!e.busy)moveParticle(e,dt,b,mobility,14);}
+ for(const m of scene.molecules){
+  if(m.kind==='prod'){moveParticle(m,dt,b,mobility,6);continue;}
+  if(m.kind!=='sub')continue;
+  if(m.bind){
+   const state=m.bind,e=state.enzyme;
+   state.age+=dt;
+   const u=cap(state.age/.28,0,1),k=u*u*(3-2*u);
+   // First approach the docking site continuously, then hold the bond briefly.
+   m.x=state.fromX+(e.x+11-state.fromX)*k;
+   m.y=state.fromY+(e.y-state.fromY)*k;
+   if(state.age>=.70)makeRelease(v,m,e);
+   continue;
+  }
+  // Brownian-like movement, wall rebounds. Slight local attraction only nearby.
+  const matching=scene.enzymes.filter(e=>e.key===SPECIES[m.s].enz&&!e.busy);
+  if(matching.length&&v.visualCredit[m.s]>=MOLECULE_PACKET*.94){
+   let closest=null,dist=Infinity;
+   for(const e of matching){const d=Math.hypot(e.x+11-m.x,e.y-m.y);if(d<dist){dist=d;closest=e;}}
+   const progress=cap((v.prod[m.s]||0)/(v.initial[m.s]||100),0,1);
+   const attractRadius=62+58*progress;
+   if(closest&&dist<attractRadius){
+    const strength=cap((attractRadius-dist)/(attractRadius-15),0,1);
+    const ux=(closest.x+11-m.x)/(dist||1),uy=(closest.y-m.y)/(dist||1);
+    m.vx+=ux*dt*(11+40*strength)*(1+progress);
+    m.vy+=uy*dt*(11+40*strength)*(1+progress);
+    const sp=Math.hypot(m.vx,m.vy);
+    if(sp>39){m.vx=m.vx/sp*39;m.vy=m.vy/sp*39;}
+   }
+  }
+  moveParticle(m,dt,b,mobility,8);
+  // Interaction starts only after actual contact with the correct enzyme's notch.
+  if(v.visualCredit[m.s]>=MOLECULE_PACKET*.94){
+   for(const e of matching){
+    if(e.busy)continue;
+    const dist=Math.hypot(m.x-(e.x+11),m.y-e.y);
+    if(dist<16){
+     const state={enzyme:e,fromX:m.x,fromY:m.y,age:0};
+     m.bind=state;e.busy=m.id;
+     v.visualCredit[m.s]=Math.max(0,v.visualCredit[m.s]-MOLECULE_PACKET);
+     scene.bindingStarts++;
+     break;
+    }
+   }
+  }
+ }
+}
 function simulate(v,group,dt){
  const p=settingsFor(group);
  for(const k of v.enzs){v.health[k]=Math.max(0,v.health[k]-dt*heatDamagePerSecond(p.temp));}
@@ -283,18 +402,15 @@ function simulate(v,group,dt){
   const rate=(100/STANDARD_FINISH_TIME)*p.enzyme*a;
   const used=Math.min(left,rate*dt);
   v.sub[s]-=used;v.prod[s]=(v.prod[s]||0)+used;
-  // An event is emitted only when the model has genuinely made a product.
-  v.visualAccumulator[s]=(v.visualAccumulator[s]||0)+used;
-  if(v.visualAccumulator[s]>=DISPLAY_REACTION_QUANTUM){
-   v.visualAccumulator[s]-=DISPLAY_REACTION_QUANTUM;
-   v.visualEvents.push({s,key,start:v.elapsed+dt,duration:1.9,slot:v.visualSequence++});
-  }
+  // Reaction output accrues visual credit. Only a *real physical encounter* can
+  // spend this credit to start a binding reaction in the beaker.
+  v.visualCredit[s]=(v.visualCredit[s]||0)+used;
  }
  v.elapsed+=dt;
- v.visualEvents=v.visualEvents.filter(ev=>v.elapsed-ev.start<ev.duration);
+
 }
 function addSample(v,group,force=false){if(!force&&v.elapsed-v.lastSample<.36)return;v.lastSample=v.elapsed;const p=settingsFor(group);v.history.push({t:round(v.elapsed),sub:{...v.sub},prod:{...v.prod},act:Object.fromEntries(v.enzs.map(k=>[k,round(activity(k,p.temp,p.ph,v.health[k])*100)]))});if(v.history.length>1200)v.history.shift();}
-function advance(dt){simTime+=dt;const groups=mode==='free'?['free']:['A','B'];for(const g of groups){simulate(vessels[g],g,dt);addSample(vessels[g],g);}}
+function advance(dt){simTime+=dt;const groups=mode==='free'?['free']:['A','B'];for(const g of groups){simulate(vessels[g],g,dt);simulateVisual(vessels[g],g,dt);addSample(vessels[g],g);}}
 function notify(msg){
  // Minimize on-screen prose; temporary feedback uses the live region in the toolbar.
  const el=$('statusLabel');el.textContent=msg;
@@ -312,8 +428,13 @@ function updateRangeBubble(input){
  else bubble.style.left=cap(ratio*100,12,88)+'%';
 }
 function updateAllRangeBubbles(){document.querySelectorAll('.range-wrap input[type=range]').forEach(updateRangeBubble);}
-function freeControlChange(){free.temp=Number($('freeTemp').value);free.ph=Number($('freePH').value);updateRangeBubble($('freeTemp'));updateRangeBubble($('freePH'));addSample(vessels.free,'free',true);refreshInfo();paint(true);}
-function setToggle(id,key,val){if(experimentStarted)return;free[key]=val;for(const b of $(id+'Toggle').querySelectorAll('button'))b.classList.toggle('active',Number(b.dataset.value)===val);if(key==='subAmount'){for(const s of Object.keys(vessels.free.sub))adjustSubstrate(vessels.free,s,val);}addSample(vessels.free,'free',true);refreshInfo();paint(true);}
+function freeControlChange(){free.temp=Number($('freeTemp').value);free.ph=Number($('freePH').value);updateRangeBubble($('freeTemp'));updateRangeBubble($('freePH'));if(simTime>=SIM_DURATION){resetSim();return;}addSample(vessels.free,'free',true);refreshInfo();paint(true);}
+function setToggle(id,key,val){
+ if(experimentStarted)return;
+ free[key]=val;
+ for(const b of $(id+'Toggle').querySelectorAll('button'))b.classList.toggle('active',Number(b.dataset.value)===val);
+ resetSim();
+}
 function createControl(k,val,group){
  const labels={temp:'溫度',ph:'酸鹼值',enzyme:'酵素量',substrate:'受質量'};
  const wrapper=document.createElement('div');wrapper.className='controlblock compact-control';wrapper.dataset.key=k;
@@ -333,6 +454,7 @@ function createControl(k,val,group){
  return wrapper;
 }
 function updateCompareControl(group,k,val){if(experimentStarted&&k!=='temp'&&k!=='ph')return;if(group==='shared'){compare.shared[k]=val;}else{compare[group]=val;}
+if(simTime>=SIM_DURATION){renderCompareSettings();resetSim();return;}
 if(k==='substrate'){const s=ENZ[compare.pair].species;for(const g of group==='shared'?['A','B']:[group])adjustSubstrate(vessels[g],s,settingsFor(g).substrate);}
 for(const g of ['A','B'])addSample(vessels[g],g,true);
 /* 改變滑桿時不得替換正在被手指拖曳的 DOM 節點。 */
@@ -361,14 +483,6 @@ function refreshInfo(){
   $(g==='B'?'summaryB':'summaryA').textContent=`受質 ${remain.toFixed(0)} ｜產物 ${sum.toFixed(0)}`;
  }
 }
-function seeded(n){return (Math.sin(n*127.1+78.233)*43758.5453)%1;}
-function particlePos(i,t,seed,active){
- const k=seed+i*1.73;
- const sp=.32+Math.max(0,active)*.64;
- const xx=.5+.45*Math.sin(k*1.49+t*sp*(.65+i%4*.1));
- const yy=.5+.45*Math.sin(k*.91+t*sp*(.58+i%5*.08));
- return [xx,yy];
-}
 function drawShape(c,kind,x,y,size,fill,symbol,isProduct){
  c.save();c.translate(x,y);c.fillStyle=fill;c.strokeStyle=isProduct?'#56718a':'#fff';c.lineWidth=isProduct?1.1:1.6;
  c.beginPath();
@@ -395,33 +509,6 @@ function drawEnzyme(c,k,x,y,angle,health){
 function rgbOf(hex){return [1,3,5].map(i=>parseInt(hex.slice(i,i+2),16));}
 function blendHex(a,b,t){const aa=rgbOf(a),bb=rgbOf(b);return `rgb(${aa.map((v,i)=>Math.round(v*(1-t)+bb[i]*t)).join(',')})`;}
 function waterColor(ph){return ph<=7?blendHex('#ef9da9','#cbece9',ph/7):blendHex('#cbece9','#80b4ec',(ph-7)/7);}
-function ease(t){return t*t*(3-2*t);}
-function drawReactionEvent(c,ev,v,spot,activityFactor){
- const key=ev.key,d=SPECIES[ev.s],ei=v.enzs.indexOf(key);
- if(ei<0)return;
- const index=ev.slot; // deterministic enzyme assignment for repeated events
- const num=Number(settingsFor(v===vessels.free?'free':v===vessels.A?'A':'B').enzyme)===2?4:2;
- const enzIndex=index%num;
- const [ex,ey]=spot(enzIndex+13,ei*17+27,activityFactor);
- const u=cap((v.elapsed-ev.start)/ev.duration,0,1);
- const dockX=ex+11,dockY=ey;
- c.save();
- if(u<.61){
-  const t=ease(cap(u/.32,0,1));
-  const x=dockX+(1-t)*26, y=dockY+(1-t)*(ev.slot%2?14:-13);
-  if(u>=.30){c.beginPath();c.arc(dockX,dockY,12.6,0,Math.PI*2);c.strokeStyle='rgba(255,255,255,.95)';c.lineWidth=1.7;c.stroke();}
-  drawShape(c,d.shape,x,y,8.25,d.color,d.symbol,false);
- }else{
-  const t=ease((u-.61)/.39),r=(d.shape==='square'?7.6:d.shape==='triangle'?6.5:6.0);
-  // The transformation of starch or protein visibly gives smaller pieces.
-  const count=d.shape==='square'?1:2;
-  for(let i=0;i<count;i++){
-   const dy=count===2?(i?1:-1):0;
-   drawShape(c,d.shape,dockX+3+t*(24+i*8),dockY+dy*(3+t*15),r,d.prodColor,d.productSymbol,true);
-  }
- }
- c.restore();
-}
 function drawBeaker(group,t){
  const canvas=$(group==='B'?'beakerB':'beakerA');if(!canvas)return;
  const v=vessels[group],p=settingsFor(group),single=mode==='free';
@@ -439,31 +526,26 @@ function drawBeaker(group,t){
  grad.addColorStop(1,base);
  c.fillStyle=grad;c.fillRect(x,y,w,h);
  c.strokeStyle=p.ph<6?'#e8a0aa':p.ph>8?'#91b4e2':'#a3cfe6';c.lineWidth=1.8;c.beginPath();c.moveTo(x,y+41);c.quadraticCurveTo(x+w/2,y+46,x+w,y+41);c.stroke();
- const rx=x+16,ry=y+60,rw=w-34,rh=h-86;
- const spot=(i,seed,a)=>{const [px,py]=particlePos(i,t,seed,a);return [rx+px*rw,ry+py*rh];};
- const activityFactor=temperatureFactor(p.temp);
- const keys=Object.keys(v.sub);
- // Non-bound particles drift independently.
- for(let j=0;j<keys.length;j++){
-  const s=keys[j],d=SPECIES[s];
-  const activeCount=v.visualEvents.filter(ev=>ev.s===s&&(v.elapsed-ev.start)/ev.duration<.61).length;
-  const subs=Math.max(0,Math.min(9,Math.ceil(Math.max(0,v.sub[s])/17))-activeCount);
-  const prods=Math.min(9,Math.ceil(Math.max(0,v.prod[s]||0)/17));
-  for(let i=0;i<subs;i++){const [px,py]=spot(i,j*11+3,activityFactor);drawShape(c,d.shape,px,py,8.3,d.color,d.symbol,false);}
-  // Product molecules are clearly smaller than the substrates for starch/protein.
-  const pr=d.shape==='circle'?6.0:d.shape==='triangle'?6.5:7.6;
-  for(let i=0;i<prods;i++){const [px,py]=spot(i+30,j*13+19,activityFactor);drawShape(c,d.shape,px,py,pr,d.prodColor,d.productSymbol,true);}
- }
- for(let j=0;j<v.enzs.length;j++){
-  const k=v.enzs[j],num=p.enzyme===2?4:2;
-  for(let i=0;i<num;i++){
-   const [px,py]=spot(i+13,j*17+27,activityFactor);
-   // Keep the binding notch pointed toward the incoming substrate.
-   drawEnzyme(c,k,px,py,Math.sin(t*.36+i)*.11,v.health[k]);
+ const scene=v.visual;
+ if(scene){
+  // Persistent products and free substrates. No particle is recreated by rendering.
+  for(const m of scene.molecules){
+   if(m.bind)continue;
+   const d=SPECIES[m.s],isProduct=m.kind==='prod';
+   const sz=isProduct?(d.shape==='circle'?6:d.shape==='triangle'?6.5:7.6):8.3;
+   drawShape(c,d.shape,m.x,m.y,sz,isProduct?d.prodColor:d.color,isProduct?d.productSymbol:d.symbol,isProduct);
+  }
+  for(const en of scene.enzymes){
+   drawEnzyme(c,en.key,en.x,en.y,0,v.health[en.key]);
+   if(en.busy){
+    c.beginPath();c.arc(en.x+11,en.y,11,0,Math.PI*2);
+    c.strokeStyle='rgba(255,255,255,.72)';c.lineWidth=1.3;c.stroke();
+   }
+  }
+  for(const m of scene.molecules){
+   if(m.bind){const d=SPECIES[m.s];drawShape(c,d.shape,m.x,m.y,8.3,d.color,d.symbol,false);}
   }
  }
- // Substrate approaches the correct notch, docks, changes, then small products separate.
- for(const ev of v.visualEvents)drawReactionEvent(c,ev,v,spot,activityFactor);
  c.restore();
  c.beginPath();c.moveTo(x,y);c.lineTo(x,y+h-r);c.quadraticCurveTo(x,y+h,x+r,y+h);
  c.lineTo(x+w-r,y+h);c.quadraticCurveTo(x+w,y+h,x+w,y+h-r);c.lineTo(x+w,y);
@@ -519,7 +601,7 @@ function loop(now){
   if(simDt>0)advance(simDt);
   for(const g of mode==='free'?['free']:['A','B'])drawBeaker(g,simTime);
   if(simTime>=SIM_DURATION-1e-7){
-    simTime=SIM_DURATION;playing=false;autoStopped=true;
+    simTime=SIM_DURATION;playing=false;autoStopped=true;experimentStarted=false;updateLocks();
     const groups=mode==='free'?['free']:['A','B'];
     for(const g of groups)addSample(vessels[g],g,true);
     updateButton();paint(true);
