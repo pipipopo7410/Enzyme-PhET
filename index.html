@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#eaf2ff">
+<title>酵素實驗室 2.0｜自由探索・雙組比較</title>
+<style>
+:root{--ink:#172642;--muted:#64748b;--line:#dfe8f3;--bg:#f4f7fc;--white:#fff;--blue:#4263eb;--orange:#ef8b36;--green:#0d9c83;--red:#e65766;--navy:#254268;--shadow:0 12px 34px rgba(47,76,126,.08)}
+*{box-sizing:border-box}html,body{min-height:100%;margin:0}body{font-family:system-ui,-apple-system,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:var(--ink);background:var(--bg);-webkit-tap-highlight-color:transparent}button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #8da8ff;outline-offset:2px}button:disabled{opacity:.5;cursor:not-allowed} .shell{max-width:1650px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;padding:14px 17px;gap:12px}
+header{display:flex;align-items:center;gap:18px;justify-content:space-between;flex-wrap:wrap} .brand{display:flex;align-items:center;gap:10px} .logo{height:45px;width:45px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(140deg,#395ac5,#6d8cf7);font-size:26px;box-shadow:0 5px 16px #4263eb39}h1{font-size:21px;line-height:1.2;letter-spacing:.02em;margin:0}.subtitle{font-size:12px;color:var(--muted);margin-top:3px}.tabs{display:flex;gap:5px;background:#e8eefa;padding:5px;border-radius:16px}.tab{min-height:43px;padding:8px 18px;border:0;background:transparent;color:#60718c;border-radius:12px;font-weight:800}.tab.active{background:white;color:#2f52d8;box-shadow:0 3px 12px #6782b81f}.version{font-size:11px;color:#687d9c;border:1px solid #dce6f4;background:white;border-radius:20px;padding:6px 10px}
+.workspace{display:grid;grid-template-columns:264px minmax(300px,1fr) minmax(325px,355px);gap:12px;min-height:0;flex:1}.panel{background:var(--white);border:1px solid #e7edf5;border-radius:20px;box-shadow:var(--shadow);min-width:0;overflow:hidden}.controls{padding:17px;overflow-y:auto;max-height:calc(100dvh - 115px)}.paneltitle{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 15px;font-size:16px;font-weight:900}.microbadge{font-size:10px;background:#e9f1ff;border-radius:99px;padding:4px 7px;color:#4362a5;font-weight:800;white-space:nowrap}.sectiontitle{font-size:13px;color:#314461;font-weight:900;margin:17px 0 9px}.chips{display:grid;gap:7px}.chip{min-height:39px;border:1.5px solid #e0e8f2;border-radius:11px;padding:8px 10px;display:flex;align-items:center;gap:8px;color:#455974;font-weight:750;font-size:13px;cursor:pointer;transition:background .15s,border .15s}.chip input{accent-color:var(--blue);width:17px;height:17px;margin:0;flex-shrink:0}.chip:has(input:checked){background:#edf3ff;border-color:#99b1fa;color:#264cba}.chip small{font-size:10px;font-weight:500;color:#8391a4}.callout{border-radius:12px;background:#eef7f8;color:#42656e;padding:10px 11px;font-size:11.5px;line-height:1.55;margin-top:12px}.hint{font-size:11px;color:#7a8aa3;line-height:1.5;margin:5px 0}.divider{height:1px;background:var(--line);margin:17px 0}.controlblock{margin:13px 0 16px}.controlhead{display:flex;justify-content:space-between;gap:9px;align-items:center;font-weight:800;color:#354761;font-size:13px;margin-bottom:4px}.val{color:var(--blue);font-variant-numeric:tabular-nums}input[type=range]{width:100%;accent-color:#536ee6;min-height:28px;cursor:pointer}.ends{display:flex;justify-content:space-between;color:#8b99ae;font-size:10px}.toggle{display:flex;border:1px solid #dce6f4;border-radius:11px;overflow:hidden;background:#f8faff;margin-top:8px}.toggle button{flex:1;padding:9px 4px;min-height:39px;border:0;background:transparent;color:#586782;font-size:12px;font-weight:800}.toggle button.active{background:#dbe8ff;color:#2148b0}.basic-select{width:100%;border:1px solid #d8e4f0;border-radius:11px;padding:10px;background:white;font-size:13px;color:#314461;min-height:43px}.lbl{display:block;font-size:12px;font-weight:850;color:#3f5270;margin-bottom:7px}
+.stage{display:flex;flex-direction:column;padding:13px 15px 12px;background:linear-gradient(160deg,#fefeff,#f1f5fe 80%)}.stage-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.stage-title{font-weight:900;font-size:15px}.live{display:inline-flex;align-items:center;gap:6px;color:#1e8b6f;font-size:11px;font-weight:800;background:#dcf8ed;padding:6px 9px;border-radius:20px}.dot{width:7px;height:7px;background:#17ba8e;border-radius:50%}.dot.on{animation:pulse 1.4s infinite}@keyframes pulse{50%{opacity:.28}}.reactions{display:flex;justify-content:space-around;align-items:stretch;gap:12px;flex:1;min-height:225px;padding:14px 0 6px}.vesselwrap{flex:1;max-width:400px;min-width:0;display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center}.beakertitle{font-size:13px;font-weight:850;text-align:center;color:#314666;display:flex;align-items:center;gap:6px}.keyA,.keyB{height:10px;width:10px;border-radius:50%;background:#436ce6}.keyB{background:#ed8a3e}.beaker{width:100%;height:clamp(195px,41dvh,420px);max-width:340px;position:relative}.beaker svg{display:block;width:100%;height:100%;overflow:visible}.beaker-summary{font-size:11px;font-weight:750;color:#52647f;text-align:center;min-height:31px}.stage-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:center;padding-top:7px}.primary,.secondary{border-radius:12px;min-height:45px;border:0;padding:10px 20px;font-weight:900;font-size:14px}.primary{color:white;background:#13a585;box-shadow:0 5px 13px #18a58330}.primary:hover{background:#118e75}.secondary{color:#405472;background:white;border:1px solid #d9e3f0}.playtime{font-size:12px;color:#74839b;font-variant-numeric:tabular-nums;min-width:76px;text-align:center}.stage-foot{font-size:11px;color:#7d8ca1;text-align:center;margin-top:9px;line-height:1.45}.stage-note{padding:10px 12px;border:1px dashed #b9d4e8;background:#f2faff;border-radius:12px;color:#4c7087;font-size:11px;line-height:1.55;margin-top:8px}
+.graphs{display:flex;flex-direction:column;gap:8px;padding:11px;overflow-y:auto;max-height:calc(100dvh - 115px)}.graph-card{border:1px solid #e5ebf4;background:#fbfdff;border-radius:13px;padding:8px 10px 5px;min-height:150px;flex:1;display:flex;flex-direction:column}.graph-top{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap}.graph-title{font-size:12px;font-weight:900;color:#3b4c63}.legend{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:10px;color:#5a6880}.legenditem{display:flex;gap:4px;align-items:center;white-space:nowrap}.swatch{width:13px;border-top:3px solid;display:inline-block}.chart-svg{display:block;width:100%;height:100%;min-height:126px;flex:1}.graph-explain{font-size:10px;color:#8794a8;line-height:1.4;margin:2px 0}.chart-y-label{font-size:9px;fill:#8190a7}.chart-axis{stroke:#bbc8d9;stroke-width:1}.chart-grid{stroke:#e5ebf4;stroke-width:1}.chart-series{fill:none;stroke-width:2.8;stroke-linejoin:round;stroke-linecap:round}.chart-label{font-size:9px;fill:#64748b}
+.note-box{font-size:11px;line-height:1.5;color:#526c89;border-radius:12px;padding:10px;background:#edf5ff;border:1px solid #dceaff}.compare-cell{background:#f7f9ff;padding:10px 11px;border:1px solid #e4eafd;border-radius:12px;margin-top:11px}.compare-head{font-size:12px;font-weight:900;color:#415779;display:flex;align-items:center;gap:7px}.varname{font-size:11px;color:#64748b;margin:4px 0 0}.modetext{font-size:12px;color:#667990;line-height:1.55}.experiment-note{font-size:11px;color:#7c879c;margin-top:12px}.foot{font-size:11px;color:#778aa6;line-height:1.5;text-align:center;padding-bottom:4px}details{border-top:1px solid #ebf0f8;padding-top:10px;margin-top:12px}summary{cursor:pointer;color:#536c96;font-weight:850;font-size:12px}details p{color:#6a7d98;font-size:11px;line-height:1.65}.explain-link{color:#4766b4;text-decoration:none}.hidden{display:none!important}
+@media(max-width:1170px){.workspace{grid-template-columns:235px minmax(280px,1fr) 300px;gap:8px}.shell{padding:9px;gap:7px}.controls{padding:12px}.stage{padding:11px}.graphs{padding:8px}.beaker{height:clamp(190px,38dvh,340px)}.chart-svg{min-height:112px}}
+@media(max-width:950px){.workspace{grid-template-columns:235px minmax(280px,1fr)}.graphs{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));max-height:none;overflow:visible}.graph-card{min-height:180px}.controls{max-height:none}.reactions{min-height:280px}.stage{min-height:500px}.beaker{height:340px}}
+@media(max-width:680px){.shell{padding:9px;gap:9px}header{gap:8px}.brand{gap:7px}h1{font-size:18px}.logo{width:38px;height:38px;border-radius:12px;font-size:22px}.version{display:none}.tabs{width:100%;display:grid;grid-template-columns:1fr 1fr}.tab{font-size:13px}.workspace{grid-template-columns:1fr;gap:9px}.controls,.graphs{max-height:none}.controls{padding:13px}.stage{min-height:430px;padding:12px}.beaker{height:270px}.reactions{min-height:240px;gap:5px}.graphs{display:flex}.graph-card{min-height:190px}.chart-svg{min-height:150px}.beakertitle{font-size:11px}.beaker-summary{font-size:10px}.foot{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.dot.on{animation:none}*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header>
+ <div class="brand"><div class="logo" aria-hidden="true">🧪</div><div><h1>酵素實驗室 <span style="color:#5571de">2.0</span></h1><div class="subtitle">從分子反應，到會考圖表判讀</div></div></div>
+ <div class="tabs" role="tablist" aria-label="操作模式"><button id="modeFree" class="tab active" role="tab" aria-selected="true">✨ 自由探索</button><button id="modeCompare" class="tab" role="tab" aria-selected="false">⚖️ 雙組對照實驗</button></div>
+ <span class="version">無外部依賴・獨立測試版</span>
+</header>
+<main class="workspace">
+ <aside class="panel controls" aria-label="參數控制台">
+  <div id="freeControls">
+   <div class="paneltitle">參數控制台 <span class="microbadge">即時調整</span></div>
+   <div class="sectiontitle">選擇受質 <small style="font-weight:500;color:#8b97aa">（最多 2 種）</small></div>
+   <div class="chips" id="subChecks">
+     <label class="chip"><input type="checkbox" value="starch" checked> <span>🔴 澱粉</span></label>
+     <label class="chip"><input type="checkbox" value="protein"> <span>🔵 蛋白質</span></label>
+     <label class="chip"><input type="checkbox" value="ammonia"> <span>🟦 氨 <small>（含氮廢物）</small></span></label>
+   </div>
+   <div class="sectiontitle">選擇酵素 <small style="font-weight:500;color:#8b97aa">（最多 2 種）</small></div>
+   <div class="chips" id="enzChecks">
+     <label class="chip"><input type="checkbox" value="saliva" checked> <span>🟢 唾液澱粉酶</span></label>
+     <label class="chip"><input type="checkbox" value="pepsin"> <span>🟣 胃蛋白酶</span></label>
+     <label class="chip"><input type="checkbox" value="liver"> <span>🟩 肝臟多種酵素 <small>（簡化示意）</small></span></label>
+   </div>
+   <div class="divider"></div>
+   <div class="controlblock"><div class="controlhead"><label for="freeTemp">溫度</label><span class="val" id="freeTempVal">37°C</span></div><input type="range" id="freeTemp" min="0" max="60" step="1" value="37"><div class="ends"><span>0°C</span><span>37°C</span><span>60°C</span></div></div>
+   <div class="controlblock"><div class="controlhead"><label for="freePH">酸鹼值</label><span class="val" id="freePHVal">pH 7.0</span></div><input type="range" id="freePH" min="0" max="14" step="0.5" value="7"><div class="ends"><span>酸性</span><span>中性</span><span>鹼性</span></div></div>
+   <div class="controlblock"><div class="controlhead">受質量（固定體積）<span class="val" id="freeSubVal">1 倍</span></div><div class="toggle" id="freeSubToggle"><button data-value="1" class="active">1 倍</button><button data-value="2">2 倍</button></div></div>
+   <div class="controlblock"><div class="controlhead">酵素量<span class="val" id="freeEnzVal">1 倍</span></div><div class="toggle" id="freeEnzToggle"><button data-value="1" class="active">1 倍</button><button data-value="2">2 倍</button></div></div>
+   <div id="freeMessage" class="callout" aria-live="polite">試著調整溫度與 pH，觀察酵素活性、受質與產物曲線如何改變。</div>
+  </div>
+  <div id="compareControls" class="hidden">
+    <div class="paneltitle">雙組實驗設定 <span class="microbadge">一次比較一項</span></div>
+    <label class="lbl" for="comparePair">反應選擇</label>
+    <select id="comparePair" class="basic-select"><option value="saliva">澱粉 × 唾液澱粉酶</option><option value="pepsin">蛋白質 × 胃蛋白酶</option><option value="liver">氨 × 肝臟多種酵素</option></select>
+    <div class="sectiontitle">這次要比較哪個變因？</div>
+    <select id="compareVar" class="basic-select"><option value="temp">溫度</option><option value="ph">酸鹼值 pH</option><option value="enzyme">酵素量</option><option value="substrate">受質量（固定體積）</option></select>
+    <p class="modetext">兩組使用相同受質和酵素，只有選擇的操作變因分開設定。其他條件兩組同步。</p>
+    <div class="compare-cell" style="border-color:#cfddfc"><div class="compare-head"><span class="keyA"></span>A 組・對照組</div><div id="compareA"></div></div>
+    <div class="compare-cell" style="border-color:#f8d9bc;background:#fffbf7"><div class="compare-head"><span class="keyB"></span>B 組・實驗組</div><div id="compareB"></div></div>
+    <div class="divider"></div>
+    <div class="sectiontitle" style="margin-top:5px">其他條件（兩組同步）</div>
+    <div id="compareShared"></div>
+    <div class="callout" id="compareMessage">兩組同步模擬，圖表上有 A、B 兩條曲線。可在反應中即時改變參數。</div>
+    <details><summary>🔍 什麼是控制變因？</summary><p>比較兩組實驗時，盡量只讓一項條件不同。例如比較溫度，就讓兩組的酸鹼值、酵素量、受質量一致。若中途調整，圖表會忠實保留變更前後的反應歷程。</p></details>
+  </div>
+ </aside>
+ <section class="panel stage" aria-label="反應模擬畫面">
+    <div class="stage-top"><div class="stage-title" id="stageTitle">微觀反應模擬</div><span class="live"><span class="dot" id="liveDot"></span><span id="statusLabel">準備就緒</span></span></div>
+    <div class="reactions" id="reactionArea">
+      <div class="vesselwrap"><div class="beakertitle" id="vesselTitleA">反應燒杯</div><div class="beaker" id="beakerA" aria-label="A組或自由探索的粒子示意圖"></div><div class="beaker-summary" id="summaryA"></div></div>
+      <div class="vesselwrap hidden" id="vesselWrapB"><div class="beakertitle"><span class="keyB"></span>B 組・實驗組</div><div class="beaker" id="beakerB" aria-label="B組粒子示意圖"></div><div class="beaker-summary" id="summaryB"></div></div>
+    </div>
+    <div class="stage-actions"><button id="playBtn" class="primary">▶ 開始反應</button><button id="resetBtn" class="secondary">↻ 重新開始</button><span id="timerLabel" class="playtime">0.0 秒</span></div>
+    <div class="stage-note" id="stageNote">每個小圓點代表一部分分子示意，並非實際分子大小或數量；酵素不會因催化反應而被消耗。</div>
+    <div class="stage-foot">可隨時調整溫度、pH、受質量與酵素量；調整結果會立即影響正在進行的反應。</div>
+ </section>
+ <aside class="panel graphs" aria-label="實驗圖表">
+    <div class="graph-card"><div class="graph-top"><span class="graph-title">📦 受質剩餘量</span><div id="legSub" class="legend"></div></div><svg class="chart-svg" id="chartSub" viewBox="0 0 340 145" preserveAspectRatio="none" role="img" aria-label="受質剩餘量隨時間變化折線圖"></svg><div class="graph-explain">橫軸：時間｜縱軸：剩餘量（相對單位）</div></div>
+    <div class="graph-card"><div class="graph-top"><span class="graph-title">✨ 產物累積量</span><div id="legProd" class="legend"></div></div><svg class="chart-svg" id="chartProd" viewBox="0 0 340 145" preserveAspectRatio="none" role="img" aria-label="產物累積量隨時間變化折線圖"></svg><div class="graph-explain">橫軸：時間｜縱軸：產物量（相對單位）</div></div>
+    <div class="graph-card"><div class="graph-top"><span class="graph-title">⚡ 酵素相對活性</span><div id="legAct" class="legend"></div></div><svg class="chart-svg" id="chartAct" viewBox="0 0 340 145" preserveAspectRatio="none" role="img" aria-label="酵素相對活性隨時間變化折線圖"></svg><div class="graph-explain">橫軸：時間｜縱軸：相對活性（%）</div></div>
+    <div class="note-box" id="graphNote">試著觀察：受質曲線向下、產物曲線向上，分別代表什麼？斜率又透露了什麼資訊？</div>
+ </aside>
+</main>
+<footer class="foot">教學用簡化模型，並非實測數據。肝臟將氨轉換為尿素涉及多種酵素與其他反應物，畫面僅呈現跨單元的整體轉換概念。</footer>
+</div>
+<script>
+'use strict';
+/* 酵素實驗室 2.0：獨立、無第三方依賴的教學模型。所有數量均為相對單位。 */
+const SPECIES={starch:{label:'澱粉',color:'#ef5963',product:'較小的醣類',enz:'saliva',prodColor:'#20ac77'},protein:{label:'蛋白質',color:'#5180e9',product:'較短的胺基酸鏈',enz:'pepsin',prodColor:'#a675e5'},ammonia:{label:'氨',color:'#14a3c7',product:'尿素',enz:'liver',prodColor:'#168b89'}};
+const ENZ={saliva:{label:'唾液澱粉酶',opt:7,phWidth:2.15,color:'#18a16f',species:'starch'},pepsin:{label:'胃蛋白酶',opt:2,phWidth:1.9,color:'#885cd4',species:'protein'},liver:{label:'肝臟多種酵素',opt:7.2,phWidth:2.4,color:'#16887b',species:'ammonia'}};
+const $=id=>document.getElementById(id);
+const cap=(n,a,b)=>Math.max(a,Math.min(b,n));
+const round=n=>Math.round(n*10)/10;
+function temperatureFactor(t){return t<=37?(.11+.89*Math.exp((t-37)/15)):Math.exp(-Math.pow((t-37)/11,2));}
+function phFactor(key,ph){const e=ENZ[key];return Math.exp(-.5*Math.pow((ph-e.opt)/e.phWidth,2));}
+function activity(key,temp,ph,health){return cap(temperatureFactor(temp)*phFactor(key,ph)*health,0,1);}
+function heatDamagePerSecond(t){return t<=42?0:0.00022*Math.pow(t-42,1.65);}
+function newVessel(subs=['starch'],enzs=['saliva'],amount=1){return {sub:Object.fromEntries(subs.map(s=>[s,100*amount])),prod:Object.fromEntries(subs.map(s=>[s,0])),initial:Object.fromEntries(subs.map(s=>[s,100*amount])),enzs:[...enzs],health:{saliva:1,pepsin:1,liver:1},elapsed:0,history:[],lastSample:-1};}
+function getOptions(type){return [...$(type==='sub'?'subChecks':'enzChecks').querySelectorAll('input:checked')].map(x=>x.value)};
+const defaultFree=()=>({temp:37,ph:7,subAmount:1,enzAmount:1,subs:['starch'],enzs:['saliva']});
+let free=defaultFree();
+let compare={pair:'saliva',variable:'temp',shared:{temp:37,ph:7,enzyme:1,substrate:1},A:37,B:45};
+let mode='free',playing=false,simTime=0,prevFrame=0,lastPaint=0;
+let vessels={free:newVessel(),A:newVessel(),B:newVessel()};
+let notification='';
+function compareValues(k,group){return k===compare.variable?compare[group]:compare.shared[k];}
+function settingsFor(group){if(group==='free')return {temp:free.temp,ph:free.ph,enzyme:free.enzAmount,substrate:free.subAmount};return {temp:compareValues('temp',group),ph:compareValues('ph',group),enzyme:compareValues('enzyme',group),substrate:compareValues('substrate',group)};}
+function resetSim(){playing=false;simTime=0;prevFrame=0;vessels.free=newVessel(free.subs,free.enzs,free.subAmount);const sub=ENZ[compare.pair].species;const mk=g=>newVessel([sub],[compare.pair],settingsFor(g).substrate);vessels.A=mk('A');vessels.B=mk('B');for(const v of Object.values(vessels))addSample(v,v===vessels.free?'free':v===vessels.A?'A':'B',true);updateButton();refreshInfo();paint(true);}
+function adjustSubstrate(v,k,amount){const previous=v.initial[k]||0;const desired=100*amount;if(Math.abs(previous-desired)>1e-8){const delta=desired-previous;v.sub[k]=Math.max(0,(v.sub[k]||0)+delta);v.initial[k]=desired;}}
+function updateSelections(){free.subs=getOptions('sub');free.enzs=getOptions('enz');const v=vessels.free;for(const k of Object.keys(v.sub)){if(!free.subs.includes(k)){delete v.sub[k];delete v.prod[k];delete v.initial[k];}}
+for(const k of free.subs){if(!(k in v.sub)){v.sub[k]=100*free.subAmount;v.prod[k]=0;v.initial[k]=100*free.subAmount;}}
+v.enzs=[...free.enzs];v.history=[];v.lastSample=-1;addSample(v,'free',true);refreshInfo();paint(true);}
+function simulate(v,group,dt){const p=settingsFor(group);for(const k of v.enzs){v.health[k]=Math.max(0,v.health[k]-dt*heatDamagePerSecond(p.temp));}
+for(const s of Object.keys(v.sub)){const key=SPECIES[s].enz;if(!v.enzs.includes(key))continue;const a=activity(key,p.temp,p.ph,v.health[key]);const left=v.sub[s];if(left<=0||a<=0)continue;const rate=7.5*p.enzyme*a*left/(left+55);const used=Math.min(left,rate*dt);v.sub[s]-=used;v.prod[s]=(v.prod[s]||0)+used;}
+v.elapsed+=dt;
+}
+function addSample(v,group,force=false){if(!force&&v.elapsed-v.lastSample<.36)return;v.lastSample=v.elapsed;const p=settingsFor(group);v.history.push({t:round(v.elapsed),sub:{...v.sub},prod:{...v.prod},act:Object.fromEntries(v.enzs.map(k=>[k,round(activity(k,p.temp,p.ph,v.health[k])*100)]))});if(v.history.length>1200)v.history.shift();}
+function advance(dt){simTime+=dt;const groups=mode==='free'?['free']:['A','B'];for(const g of groups){simulate(vessels[g],g,dt);addSample(vessels[g],g);}}
+function notify(msg){notification=msg;const target=mode==='free'?$('freeMessage'):$('compareMessage');target.textContent=msg;}
+function freeControlChange(){free.temp=Number($('freeTemp').value);free.ph=Number($('freePH').value);$('freeTempVal').textContent=free.temp+'°C';$('freePHVal').textContent='pH '+free.ph.toFixed(1);addSample(vessels.free,'free',true);refreshInfo();paint(true);}
+function setToggle(id,key,val){free[key]=val;$(id+'Val').textContent=val+' 倍';for(const b of $(id+'Toggle').querySelectorAll('button'))b.classList.toggle('active',Number(b.dataset.value)===val);if(key==='subAmount'){for(const s of Object.keys(vessels.free.sub))adjustSubstrate(vessels.free,s,val);}addSample(vessels.free,'free',true);refreshInfo();paint(true);}
+function valueLabel(k,v){return k==='temp'?v+'°C':k==='ph'?'pH '+Number(v).toFixed(1):v+' 倍';}
+function createControl(k,val,group){const labels={temp:'溫度',ph:'酸鹼值',enzyme:'酵素量',substrate:'受質量'};const wrapper=document.createElement('div');wrapper.className='controlblock';wrapper.style.margin='8px 0';const head=document.createElement('div');head.className='controlhead';const label=document.createElement('label');label.textContent=labels[k];const value=document.createElement('span');value.className='val';value.textContent=valueLabel(k,val);head.append(label,value);wrapper.appendChild(head);
+if(k==='temp'||k==='ph'){const input=document.createElement('input');input.type='range';input.min='0';input.max=k==='temp'?'60':'14';input.step=k==='temp'?'1':'0.5';input.value=val;label.htmlFor='cmp_'+group+'_'+k;input.id=label.htmlFor;input.addEventListener('input',()=>updateCompareControl(group,k,Number(input.value)));wrapper.appendChild(input);}
+else{const t=document.createElement('div');t.className='toggle';for(const n of [1,2]){const b=document.createElement('button');b.textContent=n+' 倍';b.classList.toggle('active',n===val);b.addEventListener('click',()=>updateCompareControl(group,k,n));t.appendChild(b);}wrapper.appendChild(t);}
+return wrapper;}
+function updateCompareControl(group,k,val){if(group==='shared'){compare.shared[k]=val;}else{compare[group]=val;}
+if(k==='substrate'){const s=ENZ[compare.pair].species;for(const g of group==='shared'?['A','B']:[group])adjustSubstrate(vessels[g],s,settingsFor(g).substrate);}
+for(const g of ['A','B'])addSample(vessels[g],g,true);
+/* 改變滑桿時不得替換正在被手指拖曳的 DOM 節點。 */
+if(k==='temp'||k==='ph'){const target=$('compare'+(group==='shared'?'Shared':group));const shown=target.querySelector('.val');if(shown)shown.textContent=valueLabel(k,val);}else{renderCompareSettings();}
+refreshInfo();paint(true);}
+function renderCompareSettings(){for(const g of ['A','B']){const node=$('compare'+g);node.replaceChildren(createControl(compare.variable,compare[g],g));}
+const common=$('compareShared');common.replaceChildren();for(const k of ['temp','ph','enzyme','substrate'])if(k!==compare.variable)common.appendChild(createControl(k,compare.shared[k],'shared'));}
+function setCompareVariable(k){compare.variable=k;const baseline=compare.shared[k];compare.A=baseline;compare.B=k==='temp'?45:k==='ph'?Math.min(14,baseline+3):2;renderCompareSettings();resetSim();}
+function setPair(k){compare.pair=k;compare.shared.ph=k==='pepsin'?2:7;const v=compare.variable;compare.A=compare.shared[v];compare.B=v==='temp'?45:v==='ph'?Math.min(14,compare.A+3):2;renderCompareSettings();resetSim();}
+function switchMode(m){if(mode===m)return;mode=m;playing=false;simTime=0;$('freeControls').classList.toggle('hidden',mode!=='free');$('compareControls').classList.toggle('hidden',mode!=='compare');$('vesselWrapB').classList.toggle('hidden',mode!=='compare');$('modeFree').classList.toggle('active',mode==='free');$('modeCompare').classList.toggle('active',mode==='compare');$('modeFree').setAttribute('aria-selected',String(mode==='free'));$('modeCompare').setAttribute('aria-selected',String(mode==='compare'));$('stageTitle').textContent=mode==='free'?'微觀反應模擬':'兩組同步反應模擬';$('vesselTitleA').innerHTML=mode==='free'?'反應燒杯':'<span class="keyA"></span>A 組・對照組';resetSim();}
+function updateButton(){$('playBtn').textContent=playing?'Ⅱ 暫停反應':simTime>0?'▶ 繼續反應':'▶ 開始反應';$('statusLabel').textContent=playing?'正在反應':simTime>0?'已暫停':'準備就緒';$('liveDot').classList.toggle('on',playing);}
+function refreshInfo(){const names=mode==='free'?free.subs.map(k=>SPECIES[k].label).join('、'):SPECIES[ENZ[compare.pair].species].label;
+const enzNames=mode==='free'?free.enzs.map(k=>ENZ[k].label).join('、'):ENZ[compare.pair].label;
+$('stageNote').textContent=mode==='free'?`受質：${names||'未選擇'}｜酵素：${enzNames||'未選擇'}。粒子為示意，酵素不因催化反應而被消耗。`:`兩組只分開調整「${{temp:'溫度',ph:'pH',enzyme:'酵素量',substrate:'受質量'}[compare.variable]}」；其他條件同步。若中途修改，折線會保留整段實驗歷程。`;
+$('timerLabel').textContent=simTime.toFixed(1)+' 秒';
+for(const g of mode==='free'?['free']:['A','B']){const v=vessels[g],p=settingsFor(g),sum=Object.values(v.prod).reduce((a,b)=>a+b,0),remaining=Object.values(v.sub).reduce((a,b)=>a+b,0);$(g==='B'?'summaryB':'summaryA').textContent=`受質 ${remaining.toFixed(0)}｜產物 ${sum.toFixed(0)}（相對單位）`;
+}
+if(mode==='compare')$('graphNote').textContent='兩條線代表 A、B 組。觀察起始條件、曲線斜率與最後產量；若中途調整變因，請留意改變發生的時間。';else $('graphNote').textContent='觀察受質下降、產物上升及酵素活性的差別。曲線斜率愈陡，代表該段時間數量改變愈快。';
+}
+function seeded(n){return (Math.sin(n*127.1+78.233)*43758.5453)%1;}
+function particlePos(i,t,seed,active){const ph=(seed+i*1.29);const speed=.25+active*.68;const x=25+70*(.5+.5*Math.sin(ph*2.12+t*speed*(.68+i%3*.1)) );const y=19+79*(.5+.5*Math.sin(ph*1.31+t*speed*(.45+i%4*.12)));return [x,y];}
+function drawBeaker(group,t){const v=vessels[group],p=settingsFor(group);const selected=Object.keys(v.sub);const enzymes=v.enzs;
+const color=group==='B'?'#ec9c64':'#8caef6';let svg=`<svg viewBox="0 0 150 240" role="img" aria-label="粒子運動與反應示意"><defs><linearGradient id="water${group}" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${group==='B'?'#fee7d2':'#e5f0ff'}"/><stop offset="1" stop-color="${group==='B'?'#ffe9c0':'#d4f4ee'}"/></linearGradient><clipPath id="clip${group}"><path d="M20 10 L20 210 Q20 231 41 231 L109 231 Q130 231 130 210 L130 10 Z"/></clipPath></defs><path d="M20 10 V210 Q20 231 41 231 H109 Q130 231 130 210 V10" fill="url(#water${group})" stroke="#71849b" stroke-width="4" stroke-linecap="round"/><path d="M20 40 Q75 45 130 40" stroke="#a8d8ee" fill="none" stroke-width="2" opacity=".7"/>`;
+svg+=`<g clip-path="url(#clip${group})">`;
+for(let c=0;c<selected.length;c++){const s=selected[c],dat=SPECIES[s];const subcount=Math.min(16,Math.ceil(v.sub[s]/13));const productCount=Math.min(16,Math.floor((v.prod[s]||0)/13));
+for(let i=0;i<subcount;i++){const [x,y]=particlePos(i,t,c*9+2,.65+Math.max(0,temperatureFactor(p.temp))*.5);svg+=`<circle cx="${x*1.19+0}" cy="${y*2.04+5}" r="5.2" fill="${dat.color}" stroke="white" stroke-width="1.1" opacity=".94"/>`;}
+for(let i=0;i<productCount;i++){const [x,y]=particlePos(i+17,t,c*8+11,.45+temperatureFactor(p.temp)*.55);if(s==='ammonia'){svg+=`<circle cx="${x*1.19}" cy="${y*2.04+5}" r="3.5" fill="${dat.prodColor}" stroke="white" stroke-width=".7"/>`;}else{const px=x*1.19,py=y*2.04+5;svg+=`<g><line x1="${px-3}" y1="${py}" x2="${px+3}" y2="${py}" stroke="${dat.prodColor}" stroke-width="2"/><circle cx="${px-4}" cy="${py}" r="3" fill="${dat.prodColor}" stroke="white" stroke-width=".5"/><circle cx="${px+4}" cy="${py}" r="3" fill="${dat.prodColor}" stroke="white" stroke-width=".5"/></g>`;}}}
+for(let c=0;c<enzymes.length;c++){const k=enzymes[c];const count=p.enzyme===2?6:3;for(let i=0;i<count;i++){const [x,y]=particlePos(i+7,t,c*14+25,.28+temperatureFactor(p.temp)*.33);const xc=x*1.19,yc=y*2.04+5;const a=activity(k,p.temp,p.ph,v.health[k]);svg+=`<g transform="translate(${xc.toFixed(1)} ${yc.toFixed(1)}) rotate(${(i*32+t*10)%360})"><path d="M-8 -7 H6 L8 -1 L2 3 L8 7 H-8 Z" fill="${ENZ[k].color}" stroke="${a<.2?'#fca5a5':'#ffffff'}" stroke-width="1.8" opacity="${.56+.4*v.health[k]}"/></g>`;}}
+svg+='</g>';for(let i=0;i<4;i++){svg+=`<line x1="122" y1="${70+i*42}" x2="130" y2="${70+i*42}" stroke="#819bb3" stroke-width="1.5"/>`;}
+svg+=`<text x="75" y="24" text-anchor="middle" font-size="9.4" font-weight="700" fill="#66809b">${p.temp}°C · pH ${p.ph.toFixed(1)}</text></svg>`;
+$(group==='B'?'beakerB':'beakerA').innerHTML=svg;
+}
+function safeSeries(v,field,key){return v.history.map(pt=>({t:pt.t,y:field==='act'?(pt.act[key]??0):pt[field][key]??0}));}
+function showLegend(node,items){node.innerHTML=items.map(it=>`<span class="legenditem"><i class="swatch" style="border-color:${it.color};border-top-style:${it.dash?'dashed':'solid'}"></i>${it.label}</span>`).join('');}
+function drawChart(svgid,items,maxY){const el=$(svgid),W=340,H=145,L=35,R=8,T=8,B=23,w=W-L-R,h=H-T-B;const current=mode==='free'?vessels.free.elapsed:vessels.A.elapsed;const xmin=Math.max(0,current-75),xmax=Math.max(40,current,xmin+1),ymax=maxY;
+let markup='';for(let i=0;i<=4;i++){const yy=T+h-i*h/4;markup+=`<line class="chart-grid" x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}"/><text class="chart-y-label" x="${L-6}" y="${yy+3}" text-anchor="end">${Math.round(ymax*i/4)}</text>`;}
+markup+=`<line class="chart-axis" x1="${L}" x2="${W-R}" y1="${T+h}" y2="${T+h}"/>`;
+for(let i=0;i<=4;i++){const val=xmin+(xmax-xmin)*i/4;markup+=`<text class="chart-label" x="${L+w*i/4}" y="${H-5}" text-anchor="middle">${Math.round(val)}</text>`;}
+markup+=`<defs><clipPath id="clip-${svgid}"><rect x="${L}" y="${T}" width="${w}" height="${h}"/></clipPath></defs><g clip-path="url(#clip-${svgid})">`;
+for(const item of items){const points=item.points.filter(pt=>pt.t>=xmin-.5);if(!points.length)continue;const path=points.map((pt,i)=>`${i?'L':'M'}${(L+cap((pt.t-xmin)/(xmax-xmin),0,1)*w).toFixed(1)},${(T+h-cap(pt.y/ymax,0,1)*h).toFixed(1)}`).join(' ');
+markup+=`<path class="chart-series" stroke="${item.color}" ${item.dash?'stroke-dasharray="7 5"':''} d="${path}"/>`;const last=points[points.length-1];markup+=`<circle cx="${(L+cap((last.t-xmin)/(xmax-xmin),0,1)*w).toFixed(1)}" cy="${(T+h-cap(last.y/ymax,0,1)*h).toFixed(1)}" r="2.9" fill="${item.color}"/>`;}
+markup+='</g>';el.innerHTML=markup;}
+function renderCharts(){const f=mode==='free',v=vessels.free;let itemsSub=[],itemsProd=[],itemsAct=[];const amt=f?free.subAmount:Math.max(settingsFor('A').substrate,settingsFor('B').substrate);let ys=amt===2?225:120;
+if(f){const subs=free.subs,enzs=free.enzs;itemsSub=subs.map(s=>({label:SPECIES[s].label,color:SPECIES[s].color,points:safeSeries(v,'sub',s)}));itemsProd=subs.map(s=>({label:SPECIES[s].product,color:SPECIES[s].prodColor,points:safeSeries(v,'prod',s)}));itemsAct=enzs.map(k=>({label:ENZ[k].label.replace('肝臟多種酵素','肝酶群'),color:ENZ[k].color,points:safeSeries(v,'act',k)}));}
+else{const s=ENZ[compare.pair].species,k=compare.pair;const build=(field,key)=>['A','B'].map((g,i)=>({label:g+' 組',color:i?'#ee8a35':'#4263eb',dash:!!i,points:safeSeries(vessels[g],field,key)}));itemsSub=build('sub',s);itemsProd=build('prod',s);itemsAct=build('act',k);}
+showLegend($('legSub'),itemsSub);showLegend($('legProd'),itemsProd);showLegend($('legAct'),itemsAct);drawChart('chartSub',itemsSub,ys);drawChart('chartProd',itemsProd,ys);drawChart('chartAct',itemsAct,100);}
+function paint(force=false){const now=performance.now();if(!force&&now-lastPaint<140)return;lastPaint=now;for(const g of mode==='free'?['free']:['A','B'])drawBeaker(g,simTime);renderCharts();refreshInfo();}
+function loop(now){if(playing){if(!prevFrame)prevFrame=now;const dt=cap((now-prevFrame)/1000,0,.08);advance(dt);paint();}prevFrame=now;requestAnimationFrame(loop);}
+function bind(){for(const k of ['sub','enz']){const root=$(k==='sub'?'subChecks':'enzChecks');root.addEventListener('change',e=>{const all=getOptions(k);if(all.length>2){e.target.checked=false;notify('最多選擇 2 種，避免畫面和圖表過於複雜。');return;}updateSelections();});}
+for(const k of ['Temp','PH'])$('free'+k).addEventListener('input',freeControlChange);
+for(const [id,key] of [['freeSub','subAmount'],['freeEnz','enzAmount']])$(id+'Toggle').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setToggle(id,key,Number(b.dataset.value));});
+$('modeFree').addEventListener('click',()=>switchMode('free'));
+$('modeCompare').addEventListener('click',()=>switchMode('compare'));
+$('comparePair').addEventListener('change',e=>setPair(e.target.value));
+$('compareVar').addEventListener('change',e=>setCompareVariable(e.target.value));
+$('playBtn').addEventListener('click',()=>{playing=!playing;prevFrame=0;updateButton();});
+$('resetBtn').addEventListener('click',resetSim);
+}
+bind();renderCompareSettings();resetSim();requestAnimationFrame(loop);
+</script>
+</body>
+</html>
