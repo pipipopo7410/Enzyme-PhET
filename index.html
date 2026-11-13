@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#eaf2ff">
-<title>酵素實驗室 2.6｜結合與圖表同步修正版</title>
+<title>酵素實驗室 2.7｜平滑曲線與分子同步版</title>
 <style>
 :root{--ink:#172642;--muted:#64748b;--line:#dfe8f3;--bg:#f4f7fc;--white:#fff;--blue:#4263eb;--orange:#ef8b36;--green:#0d9c83;--red:#e65766;--navy:#254268;--shadow:0 12px 34px rgba(47,76,126,.08)}
 *{box-sizing:border-box}html,body{min-height:100%;margin:0}body{font-family:system-ui,-apple-system,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:var(--ink);background:var(--bg);-webkit-tap-highlight-color:transparent}button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #8da8ff;outline-offset:2px}button:disabled{opacity:.5;cursor:not-allowed} .shell{max-width:1650px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;padding:14px 17px;gap:12px}
@@ -175,7 +175,7 @@ input.ph-slider::-moz-range-thumb{height:15px;width:15px;background:#fff;border:
 <body>
 <div class="shell">
 <header>
- <div class="brand"><div class="logo" aria-hidden="true">🧪</div><div><h1>酵素實驗室 <span style="color:#5571de">2.6</span></h1></div></div>
+ <div class="brand"><div class="logo" aria-hidden="true">🧪</div><div><h1>酵素實驗室 <span style="color:#5571de">2.7</span></h1></div></div>
  <div class="tabs" role="tablist" aria-label="操作模式"><button id="modeFree" class="tab active" role="tab" aria-selected="true">✨ 自由探索</button><button id="modeCompare" class="tab" role="tab" aria-selected="false">⚖️ 雙組對照實驗</button></div>
  <button type="button" class="help-button" id="helpBtn" aria-label="說明">？</button>
 </header>
@@ -235,7 +235,7 @@ input.ph-slider::-moz-range-thumb{height:15px;width:15px;background:#fff;border:
 </div>
 <script>
 'use strict';
-/* 酵素實驗室 2.6：配對幾何精確貼合，圖表數值由實際完成的粒子反應產生。 */
+/* 酵素實驗室 2.7：保留精確結合外觀；連續巨觀曲線與微觀分子事件共用反應進度。 */
 const SPECIES={starch:{label:'澱粉',color:'#e65362',product:'較小的醣類',symbol:'澱',productSymbol:'醣',shape:'circle',enz:'saliva',prodColor:'#ffb1b5',subSize:8.3,prodSize:6,productCount:2},protein:{label:'蛋白質',color:'#4477db',product:'較短的胺基酸鏈',symbol:'蛋',productSymbol:'胺',shape:'triangle',enz:'pepsin',prodColor:'#aac6ff',subSize:8.3,prodSize:5.6,productCount:2},ammonia:{label:'氨',color:'#159b91',product:'尿素',symbol:'氨',productSymbol:'尿素',shape:'square',enz:'liver',prodColor:'#8fd7c8',subSize:6.2,prodSize:9.2,productCount:1}};
 const SIM_DURATION=30, STANDARD_FINISH_TIME=25, SIM_SPEED=1.8;
 const ENZ={saliva:{label:'唾液澱粉酶',opt:7,phWidth:2.15,color:'#18a16f',species:'starch'},pepsin:{label:'胃蛋白酶',opt:2,phWidth:1.9,color:'#885cd4',species:'protein'},liver:{label:'肝臟多種酵素',opt:7,phWidth:2.4,color:'#c88719',species:'ammonia'}};
@@ -350,9 +350,9 @@ function makeRelease(v,m,e){
  const consumed=e.key==='liver'?2:1;
  const companions=sceneBoundMolecules(v,e).filter(q=>q!==m);
  const unitsPerIcon=10;
+ // The chart is continuous; visible icons are representative batches.
+ // A release changes the icon count, not the underlying chemical-rate curve.
  v.reactedUnits[m.s]=(v.reactedUnits[m.s]||0)+consumed;
- v.prod[m.s]=Math.min(v.initial[m.s],v.reactedUnits[m.s]*unitsPerIcon);
- v.sub[m.s]=Math.max(0,v.initial[m.s]-v.prod[m.s]);
  m.kind='prod';m.bind=null;m.removed=false;
  m.x=release.x+8;m.y=release.y;
  m.vx=18;m.vy=count===2?-12:2;
@@ -363,6 +363,11 @@ function makeRelease(v,m,e){
  }
  for(const other of companions){other.removed=true;other.bind=null;}
  e.busySlots=e.busySlots.map(()=>null);e.reactionAge=0;v.visual.releaseCount++;v.visualDirty=true;
+ // Final batch completed: chart may now reach 100% without an orphan substrate.
+ if(!v.visual.molecules.some(q=>q.kind==='sub'&&q.s===m.s&&!q.removed)){
+   const result=cap(v.quotaGenerated[m.s]||0,0,v.initial[m.s]);
+   v.prod[m.s]=result;v.sub[m.s]=v.initial[m.s]-result;
+ }
 }
 function sceneBoundMolecules(v,e){return v.visual.molecules.filter(mm=>mm.bind&&mm.bind.enzyme===e&&!mm.removed);}
 function simulateVisual(v,group,dt){
@@ -382,7 +387,7 @@ function simulateVisual(v,group,dt){
    const u=cap(state.age/.22,0,1),k=u*u*(3-2*u);
    m.x=state.fromX+(pos.x-state.fromX)*k;
    m.y=state.fromY+(pos.y-state.fromY)*k;
-   if(e.key!=='liver' && state.age>=.48)makeRelease(v,m,e);
+   if(e.key!=='liver' && state.age>=.40 && v.quotaGenerated[m.s]+1e-6>=v.quotaReserved[m.s])makeRelease(v,m,e);
    continue;
   }
   const enzymes=scene.enzymes.filter(e=>e.key===SPECIES[m.s].enz&&hasFreeSlot(e));
@@ -435,7 +440,7 @@ function simulateVisual(v,group,dt){
   const bound=sceneBoundMolecules(v,e);
   if(bound.length===2&&bound.every(m=>m.bind&&m.bind.age>=.22)){
    e.reactionAge=(e.reactionAge||0)+dt;
-   if(e.reactionAge>=.22)makeRelease(v,bound[0],e);
+   if(e.reactionAge>=.20 && v.quotaGenerated['ammonia']+1e-6>=v.quotaReserved['ammonia'])makeRelease(v,bound[0],e);
   }else if(bound.length<2){e.reactionAge=0;}
  }
  scene.molecules=scene.molecules.filter(m=>!m.removed);
@@ -449,10 +454,26 @@ function simulate(v,group,dt){
   const a=activity(key,p.temp,p.ph,v.health[key]);
   if(a<=0)continue;
   const rate=(100/(s==='ammonia'?21.8:23.8))*p.enzyme*a;
-  // Budget defines the expected *opportunities* for a reaction, not a
-  // product that has already appeared. Completion requires real on-screen docking.
+  // Smooth macroscopic curve. Each icon represents many molecules, so we do not
+  // subtract a fixed 10/20 units only when the icon disappears (that made stairs).
   v.quotaGenerated[s]=Math.min(v.initial[s],(v.quotaGenerated[s]||0)+rate*dt);
-  v.visualCredit[s]=Math.max(0,v.quotaGenerated[s]-(v.quotaReserved[s]||0));
+  // Approach a little BEFORE the matching quota arrives. The icon can dock in
+  // advance, but it may release only once the continuous curve reaches its quota.
+  const packet=s==='ammonia'?20:10;
+  const lookahead=Math.min(packet*.78, rate*1.55);
+  v.visualCredit[s]=Math.max(0,v.quotaGenerated[s]+lookahead-(v.quotaReserved[s]||0));
+ }
+ // Numerical graph and particle illustration share one progress accumulator.
+ // Reserve the last half unit until the final visible substrate has separated.
+ // This prevents the graph reading 0 while a substrate icon is still in the cup.
+ for(const s of Object.keys(v.sub)){
+  const total=v.initial[s]||0;
+  const allConverted=v.visual && !v.visual.molecules.some(m=>m.kind==='sub'&&m.s===s&&!m.removed);
+  const completed=cap(v.quotaGenerated[s]||0,0,total);
+  // Clamp smoothly before the endpoint: never move the curve backwards.
+  const displayed=allConverted ? completed : Math.min(completed,Math.max(0,total-.5));
+  v.prod[s]=displayed;
+  v.sub[s]=Math.max(0,total-displayed);
  }
  v.elapsed+=dt;
 }
