@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#eaf2ff">
-<title>酵素實驗室 2.7｜平滑曲線與分子同步版</title>
+<title>酵素實驗室 2.8.1｜平滑曲線與分子同步版</title>
 <style>
 :root{--ink:#172642;--muted:#64748b;--line:#dfe8f3;--bg:#f4f7fc;--white:#fff;--blue:#4263eb;--orange:#ef8b36;--green:#0d9c83;--red:#e65766;--navy:#254268;--shadow:0 12px 34px rgba(47,76,126,.08)}
 *{box-sizing:border-box}html,body{min-height:100%;margin:0}body{font-family:system-ui,-apple-system,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:var(--ink);background:var(--bg);-webkit-tap-highlight-color:transparent}button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #8da8ff;outline-offset:2px}button:disabled{opacity:.5;cursor:not-allowed} .shell{max-width:1650px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;padding:14px 17px;gap:12px}
 header{display:flex;align-items:center;gap:18px;justify-content:space-between;flex-wrap:wrap} .brand{display:flex;align-items:center;gap:10px} .logo{height:45px;width:45px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(140deg,#395ac5,#6d8cf7);font-size:26px;box-shadow:0 5px 16px #4263eb39}h1{font-size:21px;line-height:1.2;letter-spacing:.02em;margin:0}.subtitle{font-size:12px;color:var(--muted);margin-top:3px}.tabs{display:flex;gap:5px;background:#e8eefa;padding:5px;border-radius:16px}.tab{min-height:43px;padding:8px 18px;border:0;background:transparent;color:#60718c;border-radius:12px;font-weight:800}.tab.active{background:white;color:#2f52d8;box-shadow:0 3px 12px #6782b81f}.version{font-size:11px;color:#687d9c;border:1px solid #dce6f4;background:white;border-radius:20px;padding:6px 10px}
 .workspace{display:grid;grid-template-columns:264px minmax(300px,1fr) minmax(325px,355px);gap:12px;min-height:0;flex:1}.panel{background:var(--white);border:1px solid #e7edf5;border-radius:20px;box-shadow:var(--shadow);min-width:0;overflow:hidden}.controls{padding:17px;overflow-y:auto;max-height:calc(100dvh - 115px)}.paneltitle{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 15px;font-size:16px;font-weight:900}.microbadge{font-size:10px;background:#e9f1ff;border-radius:99px;padding:4px 7px;color:#4362a5;font-weight:800;white-space:nowrap}.sectiontitle{font-size:13px;color:#314461;font-weight:900;margin:17px 0 9px}.chips{display:grid;gap:7px}.chip{min-height:39px;border:1.5px solid #e0e8f2;border-radius:11px;padding:8px 10px;display:flex;align-items:center;gap:8px;color:#455974;font-weight:750;font-size:13px;cursor:pointer;transition:background .15s,border .15s}.chip input{accent-color:var(--blue);width:17px;height:17px;margin:0;flex-shrink:0}.chip:has(input:checked){background:#edf3ff;border-color:#99b1fa;color:#264cba}.chip small{font-size:10px;font-weight:500;color:#8391a4}.callout{border-radius:12px;background:#eef7f8;color:#42656e;padding:10px 11px;font-size:11.5px;line-height:1.55;margin-top:12px}.hint{font-size:11px;color:#7a8aa3;line-height:1.5;margin:5px 0}.divider{height:1px;background:var(--line);margin:17px 0}.controlblock{margin:13px 0 16px}.controlhead{display:flex;justify-content:space-between;gap:9px;align-items:center;font-weight:800;color:#354761;font-size:13px;margin-bottom:4px}.val{color:var(--blue);font-variant-numeric:tabular-nums}input[type=range]{width:100%;accent-color:#536ee6;min-height:28px;cursor:pointer}.ends{display:flex;justify-content:space-between;color:#8b99ae;font-size:10px}.toggle{display:flex;border:1px solid #dce6f4;border-radius:11px;overflow:hidden;background:#f8faff;margin-top:8px}.toggle button{flex:1;padding:9px 4px;min-height:39px;border:0;background:transparent;color:#586782;font-size:12px;font-weight:800}.toggle button.active{background:#dbe8ff;color:#2148b0}.basic-select{width:100%;border:1px solid #d8e4f0;border-radius:11px;padding:10px;background:white;font-size:13px;color:#314461;min-height:43px}.lbl{display:block;font-size:12px;font-weight:850;color:#3f5270;margin-bottom:7px}
 .stage{display:flex;flex-direction:column;padding:13px 15px 12px;background:linear-gradient(160deg,#fefeff,#f1f5fe 80%)}.stage-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.stage-title{font-weight:900;font-size:15px}.live{display:inline-flex;align-items:center;gap:6px;color:#1e8b6f;font-size:11px;font-weight:800;background:#dcf8ed;padding:6px 9px;border-radius:20px}.dot{width:7px;height:7px;background:#17ba8e;border-radius:50%}.dot.on{animation:pulse 1.4s infinite}@keyframes pulse{50%{opacity:.28}}.reactions{display:flex;justify-content:space-around;align-items:stretch;gap:12px;flex:1;min-height:225px;padding:14px 0 6px}.vesselwrap{flex:1;max-width:400px;min-width:0;display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center}.beakertitle{font-size:13px;font-weight:850;text-align:center;color:#314666;display:flex;align-items:center;gap:6px}.keyA,.keyB{height:10px;width:10px;border-radius:50%;background:#436ce6}.keyB{background:#ed8a3e}.beaker{width:100%;height:clamp(195px,41dvh,420px);max-width:340px;position:relative}.beaker svg{display:block;width:100%;height:100%;overflow:visible}.beaker-summary{font-size:11px;font-weight:750;color:#52647f;text-align:center;min-height:31px}.stage-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:center;padding-top:7px}.primary,.secondary{border-radius:12px;min-height:45px;border:0;padding:10px 20px;font-weight:900;font-size:14px}.primary{color:white;background:#13a585;box-shadow:0 5px 13px #18a58330}.primary:hover{background:#118e75}.secondary{color:#405472;background:white;border:1px solid #d9e3f0}.playtime{font-size:12px;color:#74839b;font-variant-numeric:tabular-nums;min-width:76px;text-align:center}.stage-foot{font-size:11px;color:#7d8ca1;text-align:center;margin-top:9px;line-height:1.45}.stage-note{padding:10px 12px;border:1px dashed #b9d4e8;background:#f2faff;border-radius:12px;color:#4c7087;font-size:11px;line-height:1.55;margin-top:8px}
-.graphs{display:flex;flex-direction:column;gap:8px;padding:11px;overflow-y:auto;max-height:calc(100dvh - 115px)}.graph-card{border:1px solid #e5ebf4;background:#fbfdff;border-radius:13px;padding:8px 10px 5px;min-height:150px;flex:1;display:flex;flex-direction:column}.graph-top{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap}.graph-title{font-size:12px;font-weight:900;color:#3b4c63}.legend{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:10px;color:#5a6880}.legenditem{display:flex;gap:4px;align-items:center;white-space:nowrap}.swatch{width:13px;border-top:3px solid;display:inline-block}.chart-svg{display:block;width:100%;height:100%;min-height:126px;flex:1}.graph-explain{font-size:10px;color:#8794a8;line-height:1.4;margin:2px 0}.chart-y-label{font-size:9px;fill:#8190a7}.chart-axis{stroke:#bbc8d9;stroke-width:1}.chart-grid{stroke:#e5ebf4;stroke-width:1}.chart-series{fill:none;stroke-width:2.8;stroke-linejoin:round;stroke-linecap:round}.chart-label{font-size:9px;fill:#64748b}
+.graphs{display:flex;flex-direction:column;gap:8px;padding:11px;overflow-y:auto;max-height:calc(100dvh - 115px)}.graph-card{border:1px solid #e5ebf4;background:#fbfdff;border-radius:13px;padding:8px 10px 5px;min-height:150px;flex:1;display:flex;flex-direction:column}.graph-top{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap}.graph-title{font-size:12px;font-weight:900;color:#3b4c63}.legend{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:10px;color:#5a6880}.legenditem{display:flex;gap:4px;align-items:center;white-space:nowrap}.swatch{width:13px;border-top:3px solid;display:inline-block}.chart-svg{display:block;width:100%;height:100%;min-height:126px;flex:1}.graph-explain{font-size:10px;color:#8794a8;line-height:1.4;margin:2px 0}.chart-y-label{font-size:9px;fill:#8190a7}.chart-axis{stroke:#bbc8d9;stroke-width:1}.chart-grid{stroke:#e5ebf4;stroke-width:1}.chart-series{fill:none;stroke-width:2.8.1;stroke-linejoin:round;stroke-linecap:round}.chart-label{font-size:9px;fill:#64748b}
 .note-box{font-size:11px;line-height:1.5;color:#526c89;border-radius:12px;padding:10px;background:#edf5ff;border:1px solid #dceaff}.compare-cell{background:#f7f9ff;padding:10px 11px;border:1px solid #e4eafd;border-radius:12px;margin-top:11px}.compare-head{font-size:12px;font-weight:900;color:#415779;display:flex;align-items:center;gap:7px}.varname{font-size:11px;color:#64748b;margin:4px 0 0}.modetext{font-size:12px;color:#667990;line-height:1.55}.experiment-note{font-size:11px;color:#7c879c;margin-top:12px}.foot{font-size:11px;color:#778aa6;line-height:1.5;text-align:center;padding-bottom:4px}details{border-top:1px solid #ebf0f8;padding-top:10px;margin-top:12px}summary{cursor:pointer;color:#536c96;font-weight:850;font-size:12px}details p{color:#6a7d98;font-size:11px;line-height:1.65}.explain-link{color:#4766b4;text-decoration:none}.hidden{display:none!important}
 @media(max-width:1170px){.workspace{grid-template-columns:235px minmax(280px,1fr) 300px;gap:8px}.shell{padding:9px;gap:7px}.controls{padding:12px}.stage{padding:11px}.graphs{padding:8px}.beaker{height:clamp(190px,38dvh,340px)}.chart-svg{min-height:112px}}
 @media(max-width:950px){.workspace{grid-template-columns:235px minmax(280px,1fr)}.graphs{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));max-height:none;overflow:visible}.graph-card{min-height:180px}.controls{max-height:none}.reactions{min-height:280px}.stage{min-height:500px}.beaker{height:340px}}
@@ -143,7 +143,7 @@ header .brand{min-width:0}header .tabs{justify-self:center}header .help-button{j
 #freeControls{height:100%;display:flex;flex-direction:column;justify-content:space-evenly;gap:0}
 #freeControls>.paneltitle{flex:none}
 #freeControls>.sectiontitle{margin-top:clamp(8px,1.8dvh,21px);margin-bottom:5px}
-#freeControls>.sectiontitle.free-variables-heading{margin-top:clamp(12px,2.8dvh,28px)}
+#freeControls>.sectiontitle.free-variables-heading{margin-top:clamp(12px,2.8.1dvh,28px)}
 #freeControls>.controlblock{margin:clamp(5px,1.1dvh,12px) 0}
 #freeControls .chips{flex:none}
 #compareControls{height:100%;display:flex;flex-direction:column;justify-content:flex-start}
@@ -175,7 +175,7 @@ input.ph-slider::-moz-range-thumb{height:15px;width:15px;background:#fff;border:
 <body>
 <div class="shell">
 <header>
- <div class="brand"><div class="logo" aria-hidden="true">🧪</div><div><h1>酵素實驗室 <span style="color:#5571de">2.7</span></h1></div></div>
+ <div class="brand"><div class="logo" aria-hidden="true">🧪</div><div><h1>酵素實驗室 <span style="color:#5571de">2.8.1</span></h1></div></div>
  <div class="tabs" role="tablist" aria-label="操作模式"><button id="modeFree" class="tab active" role="tab" aria-selected="true">✨ 自由探索</button><button id="modeCompare" class="tab" role="tab" aria-selected="false">⚖️ 雙組對照實驗</button></div>
  <button type="button" class="help-button" id="helpBtn" aria-label="說明">？</button>
 </header>
@@ -196,7 +196,7 @@ input.ph-slider::-moz-range-thumb{height:15px;width:15px;background:#fff;border:
      <label class="chip"><input type="checkbox" value="liver"> <span>肝酵素群</span></label>
    </div>
    <div class="sectiontitle free-variables-heading">環境與數量</div>
-   <div class="controlblock"><div class="controlhead"><label for="freeTemp">溫度</label></div><div class="range-wrap"><output class="range-value" id="freeTempVal" for="freeTemp">37°C</output><input type="range" id="freeTemp" data-kind="temp" min="0" max="60" step="1" value="37"></div><div class="ends"><span>0°C</span><span>37°C</span><span>60°C</span></div></div>
+   <div class="controlblock"><div class="controlhead"><label for="freeTemp">溫度</label></div><div class="range-wrap"><output class="range-value" id="freeTempVal" for="freeTemp">36°C</output><input type="range" id="freeTemp" data-kind="temp" min="0" max="60" step="1" value="36"></div><div class="ends"><span>0°C</span><span>39°C</span><span>60°C</span></div></div>
    <div class="controlblock"><div class="controlhead"><label for="freePH">酸鹼值</label></div><div class="range-wrap"><output class="range-value" id="freePHVal" for="freePH">pH 7.0</output><input type="range" class="ph-slider" id="freePH" data-kind="ph" min="0" max="14" step="0.5" value="7"></div><div class="ends"><span>酸性</span><span>中性</span><span>鹼性</span></div></div>
    <div class="controlblock"><div class="controlhead">受質量</div><div class="toggle" id="freeSubToggle"><button data-value="1" class="active">1 倍</button><button data-value="2">2 倍</button></div></div>
    <div class="controlblock"><div class="controlhead">酵素量</div><div class="toggle" id="freeEnzToggle"><button data-value="1" class="active">1 倍</button><button data-value="2">2 倍</button></div></div>
@@ -235,22 +235,23 @@ input.ph-slider::-moz-range-thumb{height:15px;width:15px;background:#fff;border:
 </div>
 <script>
 'use strict';
-/* 酵素實驗室 2.7：保留精確結合外觀；連續巨觀曲線與微觀分子事件共用反應進度。 */
+/* 酵素實驗室 2.8.1：保留 2.7 動畫、調整教學最適溫度與預設條件。 */
 const SPECIES={starch:{label:'澱粉',color:'#e65362',product:'較小的醣類',symbol:'澱',productSymbol:'醣',shape:'circle',enz:'saliva',prodColor:'#ffb1b5',subSize:8.3,prodSize:6,productCount:2},protein:{label:'蛋白質',color:'#4477db',product:'較短的胺基酸鏈',symbol:'蛋',productSymbol:'胺',shape:'triangle',enz:'pepsin',prodColor:'#aac6ff',subSize:8.3,prodSize:5.6,productCount:2},ammonia:{label:'氨',color:'#159b91',product:'尿素',symbol:'氨',productSymbol:'尿素',shape:'square',enz:'liver',prodColor:'#8fd7c8',subSize:6.2,prodSize:9.2,productCount:1}};
 const SIM_DURATION=30, STANDARD_FINISH_TIME=25, SIM_SPEED=1.8;
 const ENZ={saliva:{label:'唾液澱粉酶',opt:7,phWidth:2.15,color:'#18a16f',species:'starch'},pepsin:{label:'胃蛋白酶',opt:2,phWidth:1.9,color:'#885cd4',species:'protein'},liver:{label:'肝臟多種酵素',opt:7,phWidth:2.4,color:'#c88719',species:'ammonia'}};
 const $=id=>document.getElementById(id);
 const cap=(n,a,b)=>Math.max(a,Math.min(b,n));
 const round=n=>Math.round(n*10)/10;
-function temperatureFactor(t){return t<=37?(.11+.89*Math.exp((t-37)/15)):Math.exp(-Math.pow((t-37)/11,2));}
+// Simplified human-enzyme teaching curve; 39°C = 100%, 36°C = 93%, not measured data.
+function temperatureFactor(t){return t<=39?Math.exp(Math.log(0.93)*Math.pow((t-39)/3,2)):Math.exp(-Math.pow((t-39)/11,2));}
 function phFactor(key,ph){const e=ENZ[key];return Math.exp(-.5*Math.pow((ph-e.opt)/e.phWidth,2));}
 function activity(key,temp,ph,health){return cap(temperatureFactor(temp)*phFactor(key,ph)*health,0,1);}
 function heatDamagePerSecond(t){return t<=42?0:0.00022*Math.pow(t-42,1.65);}
 function newVessel(subs=['starch'],enzs=['saliva'],amount=1){return {sub:Object.fromEntries(subs.map(s=>[s,100*amount])),prod:Object.fromEntries(subs.map(s=>[s,0])),initial:Object.fromEntries(subs.map(s=>[s,100*amount])),enzs:[...enzs],health:{saliva:1,pepsin:1,liver:1},elapsed:0,history:[],lastSample:-1,visual:null,visualCredit:Object.fromEntries(subs.map(s=>[s,0]))};}
 function getOptions(type){return [...$(type==='sub'?'subChecks':'enzChecks').querySelectorAll('input:checked')].map(x=>x.value)};
-const defaultFree=()=>({temp:37,ph:7,subAmount:1,enzAmount:1,subs:['starch'],enzs:['saliva']});
+const defaultFree=()=>({temp:36,ph:7,subAmount:1,enzAmount:1,subs:['starch'],enzs:['saliva']});
 let free=defaultFree();
-let compare={pair:'saliva',variable:'temp',shared:{temp:37,ph:7,enzyme:1,substrate:1},A:37,B:45};
+let compare={pair:'saliva',variable:'temp',shared:{temp:36,ph:7,enzyme:1,substrate:1},A:36,B:45};
 let mode='free',playing=false,simTime=0,prevFrame=0,lastPaint=0,autoStopped=false,autoStopArmed=true,manualExtendUntil=0,experimentStarted=false;
 let activeView='controls';
 let vessels={free:newVessel(),A:newVessel(),B:newVessel()};
@@ -265,6 +266,15 @@ function resetSim(){
  for(const g of ['free','A','B'])initializeVisual(vessels[g],g);
  for(const g of ['free','A','B'])addSample(vessels[g],g,true);
  updateLocks();updateButton();refreshInfo();paint(true);
+}
+function resetToDefaultConditions(){
+ free.temp=36;free.ph=7;
+ compare.shared.temp=36;compare.shared.ph=7;
+ // The comparison group's experimental value remains different on purpose.
+ if(compare.variable==='temp'){compare.A=36;compare.B=45;}
+ if(compare.variable==='ph'){compare.A=7;compare.B=10;}
+ $('freeTemp').value=36;$('freePH').value=7;
+ renderCompareSettings();resetSim();requestAnimationFrame(updateAllRangeBubbles);
 }
 function adjustSubstrate(v,k,amount){const previous=v.initial[k]||0;const desired=100*amount;if(Math.abs(previous-desired)>1e-8){const delta=desired-previous;v.sub[k]=Math.max(0,(v.sub[k]||0)+delta);v.initial[k]=desired;}}
 function updateSelections(){
@@ -531,7 +541,7 @@ refreshInfo();paint(true);}
 function renderCompareSettings(){for(const g of ['A','B']){const node=$('compare'+g);node.replaceChildren(createControl(compare.variable,compare[g],g));}
 const common=$('compareShared');common.replaceChildren();for(const k of ['temp','ph','enzyme','substrate'])if(k!==compare.variable)common.appendChild(createControl(k,compare.shared[k],'shared'));updateLocks();requestAnimationFrame(updateAllRangeBubbles);}
 function setCompareVariable(k){if(experimentStarted)return;compare.variable=k;const baseline=compare.shared[k];compare.A=baseline;compare.B=k==='temp'?45:k==='ph'?Math.min(14,baseline+3):2;renderCompareSettings();resetSim();}
-function setPair(k){if(experimentStarted)return;compare.pair=k;compare.shared.ph=k==='pepsin'?2:7;const v=compare.variable;compare.A=compare.shared[v];compare.B=v==='temp'?45:v==='ph'?Math.min(14,compare.A+3):2;renderCompareSettings();resetSim();}
+function setPair(k){if(experimentStarted)return;compare.pair=k;compare.shared.ph=7;const v=compare.variable;compare.A=compare.shared[v];compare.B=v==='temp'?45:v==='ph'?Math.min(14,compare.A+3):2;renderCompareSettings();resetSim();}
 function switchMode(m){if(mode===m||experimentStarted)return;mode=m;playing=false;simTime=0;$('freeControls').classList.toggle('hidden',mode!=='free');$('compareControls').classList.toggle('hidden',mode!=='compare');$('vesselWrapB').classList.toggle('hidden',mode!=='compare');$('modeFree').classList.toggle('active',mode==='free');$('modeCompare').classList.toggle('active',mode==='compare');$('modeFree').setAttribute('aria-selected',String(mode==='free'));$('modeCompare').setAttribute('aria-selected',String(mode==='compare'));$('stageTitle').textContent=mode==='free'?'反應模擬':'雙組反應';$('vesselTitleA').innerHTML=mode==='free'?'反應燒杯':'<span class="keyA"></span>A 組・對照組';resetSim();}
 function updateLocks(){
  const locked=experimentStarted;
@@ -580,7 +590,7 @@ function drawEnzyme(c,k,x,y,angle,health){
  else{c.lineTo(13,7);c.lineTo(0,7);c.lineTo(0,-7);c.lineTo(13,-7);}
  c.lineTo(13,-9);c.quadraticCurveTo(13,-13,8,-13);c.closePath();
  c.globalAlpha=.64+.34*health;c.fillStyle=ENZ[k].color;c.fill();c.strokeStyle=health<.35?'#e65766':'white';c.lineWidth=1.6;c.stroke();
- if(k==='liver'){c.fillStyle='white';c.font='700 8px system-ui';c.textAlign='center';c.textBaseline='middle';c.fillText('群',-6,0);}
+ if(k==='liver'){c.fillStyle='white';c.font='700 8px system-ui';c.textAlign='center';c.textBaseline='middle';c.fillText('肝',-6,0);}
  c.restore();
 }
 // Acid -> neutral -> alkaline water; intentionally pastel so molecular labels stay readable.
@@ -694,7 +704,7 @@ $('modeCompare').addEventListener('click',()=>switchMode('compare'));
 $('comparePair').addEventListener('change',e=>setPair(e.target.value));
 $('compareVar').addEventListener('change',e=>setCompareVariable(e.target.value));
 $('playBtn').addEventListener('click',()=>{if(simTime>=SIM_DURATION)return;playing=!playing;if(playing){experimentStarted=true;updateLocks();}prevFrame=0;updateButton();});
-$('resetBtn').addEventListener('click',resetSim);
+$('resetBtn').addEventListener('click',resetToDefaultConditions);
 $('helpBtn').addEventListener('click',()=>$('helpDialog').showModal());
 $('closeHelp').addEventListener('click',()=>$('helpDialog').close());
 $('dismissHint').addEventListener('click',()=>$('portraitHint').classList.add('hidden'));
