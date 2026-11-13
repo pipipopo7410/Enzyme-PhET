@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#eaf2ff">
-<title>酵素實驗室 2.2｜圖形與30秒實驗版</title>
+<title>酵素實驗室 2.3｜分子吸附反應版</title>
 <style>
 :root{--ink:#172642;--muted:#64748b;--line:#dfe8f3;--bg:#f4f7fc;--white:#fff;--blue:#4263eb;--orange:#ef8b36;--green:#0d9c83;--red:#e65766;--navy:#254268;--shadow:0 12px 34px rgba(47,76,126,.08)}
 *{box-sizing:border-box}html,body{min-height:100%;margin:0}body{font-family:system-ui,-apple-system,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:var(--ink);background:var(--bg);-webkit-tap-highlight-color:transparent}button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #8da8ff;outline-offset:2px}button:disabled{opacity:.5;cursor:not-allowed} .shell{max-width:1650px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;padding:14px 17px;gap:12px}
@@ -160,12 +160,22 @@ input.ph-slider::-moz-range-thumb{height:15px;width:15px;background:#fff;border:
 @media(max-width:949px) and (max-height:600px){header{display:grid;grid-template-columns:auto 1fr auto;gap:5px}header .tabs{order:0;width:auto;display:flex;justify-self:center}header .help-button{justify-self:end}#freeControls{display:grid;grid-template-columns:1fr 1fr;column-gap:12px;align-content:space-around;justify-content:initial}#freeControls>.paneltitle{grid-column:1/-1}#freeControls>.sectiontitle:nth-child(2){grid-column:1;grid-row:2}#freeControls>#subChecks{grid-column:1;grid-row:3}#freeControls>.sectiontitle:nth-child(4){grid-column:2;grid-row:2}#freeControls>#enzChecks{grid-column:2;grid-row:3}#freeControls>.free-variables-heading{grid-column:1/-1;grid-row:4}#freeControls>.controlblock:nth-child(7){grid-column:1;grid-row:5}#freeControls>.controlblock:nth-child(8){grid-column:2;grid-row:5}#freeControls>.controlblock:nth-child(9){grid-column:1;grid-row:6}#freeControls>.controlblock:nth-child(10){grid-column:2;grid-row:6}#compareControls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}#compareControls>.shared-heading{grid-column:3;grid-row:2!important;margin:0!important;padding-top:0;border-top:0}#compareShared{grid-column:3;grid-row:3/span 2;gap:0}}
 @media(max-height:730px) and (min-width:950px){#freeControls{justify-content:space-between}#freeControls>.sectiontitle{margin-top:4px}#freeControls>.controlblock{margin:4px 0}}
 
+
+/* 2.3: moving range-thumb values, no redundant duplicate amount labels */
+.range-wrap{position:relative;padding-top:19px;min-width:0;}
+.range-wrap .range-value{position:absolute;top:0;left:50%;transform:translateX(-50%);white-space:nowrap;pointer-events:none;color:#345ad6;font-size:11px;font-weight:900;line-height:17px;font-variant-numeric:tabular-nums;z-index:2}
+.range-wrap input[type=range]{display:block;width:100%;margin:0;}
+.range-wrap .ph-slider{margin:4px 0 6px;}
+.compact-control .range-wrap{padding-top:16px;}
+.compact-control .range-value{font-size:10px;line-height:15px;}
+@media(max-height:780px){.range-wrap{padding-top:15px}.compact-control .range-wrap{padding-top:14px}.range-wrap .range-value{font-size:10px;line-height:14px}}
+@media(max-height:620px){.range-wrap{padding-top:12px}.compact-control .range-wrap{padding-top:11px}.range-wrap .range-value{font-size:9.5px;line-height:11px}}
 </style>
 </head>
 <body>
 <div class="shell">
 <header>
- <div class="brand"><div class="logo" aria-hidden="true">🧪</div><div><h1>酵素實驗室 <span style="color:#5571de">2.2</span></h1></div></div>
+ <div class="brand"><div class="logo" aria-hidden="true">🧪</div><div><h1>酵素實驗室 <span style="color:#5571de">2.3</span></h1></div></div>
  <div class="tabs" role="tablist" aria-label="操作模式"><button id="modeFree" class="tab active" role="tab" aria-selected="true">✨ 自由探索</button><button id="modeCompare" class="tab" role="tab" aria-selected="false">⚖️ 雙組對照實驗</button></div>
  <button type="button" class="help-button" id="helpBtn" aria-label="說明">？</button>
 </header>
@@ -186,10 +196,10 @@ input.ph-slider::-moz-range-thumb{height:15px;width:15px;background:#fff;border:
      <label class="chip"><input type="checkbox" value="liver"> <span>肝酵素群</span></label>
    </div>
    <div class="sectiontitle free-variables-heading">環境與數量</div>
-   <div class="controlblock"><div class="controlhead"><label for="freeTemp">溫度</label><span class="val" id="freeTempVal">37°C</span></div><input type="range" id="freeTemp" min="0" max="60" step="1" value="37"><div class="ends"><span>0°C</span><span>37°C</span><span>60°C</span></div></div>
-   <div class="controlblock"><div class="controlhead"><label for="freePH">酸鹼值</label><span class="val" id="freePHVal">pH 7.0</span></div><input type="range" class="ph-slider" id="freePH" min="0" max="14" step="0.5" value="7"><div class="ends"><span>酸性</span><span>中性</span><span>鹼性</span></div></div>
-   <div class="controlblock"><div class="controlhead">受質量<span class="val" id="freeSubVal">1 倍</span></div><div class="toggle" id="freeSubToggle"><button data-value="1" class="active">1 倍</button><button data-value="2">2 倍</button></div></div>
-   <div class="controlblock"><div class="controlhead">酵素量<span class="val" id="freeEnzVal">1 倍</span></div><div class="toggle" id="freeEnzToggle"><button data-value="1" class="active">1 倍</button><button data-value="2">2 倍</button></div></div>
+   <div class="controlblock"><div class="controlhead"><label for="freeTemp">溫度</label></div><div class="range-wrap"><output class="range-value" id="freeTempVal" for="freeTemp">37°C</output><input type="range" id="freeTemp" data-kind="temp" min="0" max="60" step="1" value="37"></div><div class="ends"><span>0°C</span><span>37°C</span><span>60°C</span></div></div>
+   <div class="controlblock"><div class="controlhead"><label for="freePH">酸鹼值</label></div><div class="range-wrap"><output class="range-value" id="freePHVal" for="freePH">pH 7.0</output><input type="range" class="ph-slider" id="freePH" data-kind="ph" min="0" max="14" step="0.5" value="7"></div><div class="ends"><span>酸性</span><span>中性</span><span>鹼性</span></div></div>
+   <div class="controlblock"><div class="controlhead">受質量</div><div class="toggle" id="freeSubToggle"><button data-value="1" class="active">1 倍</button><button data-value="2">2 倍</button></div></div>
+   <div class="controlblock"><div class="controlhead">酵素量</div><div class="toggle" id="freeEnzToggle"><button data-value="1" class="active">1 倍</button><button data-value="2">2 倍</button></div></div>
    <div id="freeMessage" class="callout" aria-live="polite">試著調整溫度與 pH，觀察酵素活性、受質與產物曲線如何改變。</div>
   </div>
   <div id="compareControls" class="hidden">
@@ -236,7 +246,7 @@ function temperatureFactor(t){return t<=37?(.11+.89*Math.exp((t-37)/15)):Math.ex
 function phFactor(key,ph){const e=ENZ[key];return Math.exp(-.5*Math.pow((ph-e.opt)/e.phWidth,2));}
 function activity(key,temp,ph,health){return cap(temperatureFactor(temp)*phFactor(key,ph)*health,0,1);}
 function heatDamagePerSecond(t){return t<=42?0:0.00022*Math.pow(t-42,1.65);}
-function newVessel(subs=['starch'],enzs=['saliva'],amount=1){return {sub:Object.fromEntries(subs.map(s=>[s,100*amount])),prod:Object.fromEntries(subs.map(s=>[s,0])),initial:Object.fromEntries(subs.map(s=>[s,100*amount])),enzs:[...enzs],health:{saliva:1,pepsin:1,liver:1},elapsed:0,history:[],lastSample:-1};}
+function newVessel(subs=['starch'],enzs=['saliva'],amount=1){return {sub:Object.fromEntries(subs.map(s=>[s,100*amount])),prod:Object.fromEntries(subs.map(s=>[s,0])),initial:Object.fromEntries(subs.map(s=>[s,100*amount])),enzs:[...enzs],health:{saliva:1,pepsin:1,liver:1},elapsed:0,history:[],lastSample:-1,visualEvents:[],visualAccumulator:Object.fromEntries(subs.map(s=>[s,0])),visualSequence:0};}
 function getOptions(type){return [...$(type==='sub'?'subChecks':'enzChecks').querySelectorAll('input:checked')].map(x=>x.value)};
 const defaultFree=()=>({temp:37,ph:7,subAmount:1,enzAmount:1,subs:['starch'],enzs:['saliva']});
 let free=defaultFree();
@@ -257,11 +267,31 @@ function resetSim(){
 }
 function adjustSubstrate(v,k,amount){const previous=v.initial[k]||0;const desired=100*amount;if(Math.abs(previous-desired)>1e-8){const delta=desired-previous;v.sub[k]=Math.max(0,(v.sub[k]||0)+delta);v.initial[k]=desired;}}
 function updateSelections(){if(experimentStarted)return;free.subs=getOptions('sub');free.enzs=getOptions('enz');const v=vessels.free;for(const k of Object.keys(v.sub)){if(!free.subs.includes(k)){delete v.sub[k];delete v.prod[k];delete v.initial[k];}}
-for(const k of free.subs){if(!(k in v.sub)){v.sub[k]=100*free.subAmount;v.prod[k]=0;v.initial[k]=100*free.subAmount;}}
+for(const k of free.subs){if(!(k in v.sub)){v.sub[k]=100*free.subAmount;v.prod[k]=0;v.initial[k]=100*free.subAmount;}}v.visualEvents=[];v.visualAccumulator=Object.fromEntries(free.subs.map(s=>[s,0]));v.visualSequence=0;
 v.enzs=[...free.enzs];v.history=[];v.lastSample=-1;addSample(v,'free',true);refreshInfo();paint(true);}
-function simulate(v,group,dt){const p=settingsFor(group);for(const k of v.enzs){v.health[k]=Math.max(0,v.health[k]-dt*heatDamagePerSecond(p.temp));}
-for(const s of Object.keys(v.sub)){const key=SPECIES[s].enz;if(!v.enzs.includes(key))continue;const a=activity(key,p.temp,p.ph,v.health[key]);const left=v.sub[s];if(left<=0||a<=0)continue;const rate=(100/STANDARD_FINISH_TIME)*p.enzyme*a;const used=Math.min(left,rate*dt);v.sub[s]-=used;v.prod[s]=(v.prod[s]||0)+used;}
-v.elapsed+=dt;
+// Each visual adsorption event represents a small packet of actual reacted substrate.
+// The graph and the binding animation therefore share the same reaction model.
+const DISPLAY_REACTION_QUANTUM=11.5;
+function simulate(v,group,dt){
+ const p=settingsFor(group);
+ for(const k of v.enzs){v.health[k]=Math.max(0,v.health[k]-dt*heatDamagePerSecond(p.temp));}
+ for(const s of Object.keys(v.sub)){
+  const key=SPECIES[s].enz;
+  if(!v.enzs.includes(key))continue;
+  const a=activity(key,p.temp,p.ph,v.health[key]),left=v.sub[s];
+  if(left<=0||a<=0)continue;
+  const rate=(100/STANDARD_FINISH_TIME)*p.enzyme*a;
+  const used=Math.min(left,rate*dt);
+  v.sub[s]-=used;v.prod[s]=(v.prod[s]||0)+used;
+  // An event is emitted only when the model has genuinely made a product.
+  v.visualAccumulator[s]=(v.visualAccumulator[s]||0)+used;
+  if(v.visualAccumulator[s]>=DISPLAY_REACTION_QUANTUM){
+   v.visualAccumulator[s]-=DISPLAY_REACTION_QUANTUM;
+   v.visualEvents.push({s,key,start:v.elapsed+dt,duration:1.9,slot:v.visualSequence++});
+  }
+ }
+ v.elapsed+=dt;
+ v.visualEvents=v.visualEvents.filter(ev=>v.elapsed-ev.start<ev.duration);
 }
 function addSample(v,group,force=false){if(!force&&v.elapsed-v.lastSample<.36)return;v.lastSample=v.elapsed;const p=settingsFor(group);v.history.push({t:round(v.elapsed),sub:{...v.sub},prod:{...v.prod},act:Object.fromEntries(v.enzs.map(k=>[k,round(activity(k,p.temp,p.ph,v.health[k])*100)]))});if(v.history.length>1200)v.history.shift();}
 function advance(dt){simTime+=dt;const groups=mode==='free'?['free']:['A','B'];for(const g of groups){simulate(vessels[g],g,dt);addSample(vessels[g],g);}}
@@ -269,21 +299,47 @@ function notify(msg){
  // Minimize on-screen prose; temporary feedback uses the live region in the toolbar.
  const el=$('statusLabel');el.textContent=msg;
 }
-function freeControlChange(){free.temp=Number($('freeTemp').value);free.ph=Number($('freePH').value);$('freeTempVal').textContent=free.temp+'°C';$('freePHVal').textContent='pH '+free.ph.toFixed(1);addSample(vessels.free,'free',true);refreshInfo();paint(true);}
-function setToggle(id,key,val){if(experimentStarted)return;free[key]=val;$(id+'Val').textContent=val+' 倍';for(const b of $(id+'Toggle').querySelectorAll('button'))b.classList.toggle('active',Number(b.dataset.value)===val);if(key==='subAmount'){for(const s of Object.keys(vessels.free.sub))adjustSubstrate(vessels.free,s,val);}addSample(vessels.free,'free',true);refreshInfo();paint(true);}
 function valueLabel(k,v){return k==='temp'?v+'°C':k==='ph'?'pH '+Number(v).toFixed(1):v+' 倍';}
-function createControl(k,val,group){const labels={temp:'溫度',ph:'酸鹼值',enzyme:'酵素量',substrate:'受質量'};const wrapper=document.createElement('div');wrapper.className='controlblock compact-control';wrapper.dataset.key=k;const head=document.createElement('div');head.className='controlhead';const label=document.createElement('label');label.textContent=labels[k];const value=document.createElement('span');value.className='val';value.textContent=valueLabel(k,val);head.append(label,value);wrapper.appendChild(head);
-if(k==='temp'||k==='ph'){const input=document.createElement('input');input.type='range';input.min='0';input.max=k==='temp'?'60':'14';input.step=k==='temp'?'1':'0.5';input.value=val;if(k==='ph')input.classList.add('ph-slider');label.htmlFor='cmp_'+group+'_'+k;input.id=label.htmlFor;input.addEventListener('input',()=>updateCompareControl(group,k,Number(input.value)));wrapper.appendChild(input);}
-else{const t=document.createElement('div');t.className='toggle';for(const n of [1,2]){const b=document.createElement('button');b.disabled=experimentStarted;b.textContent=n+' 倍';b.classList.toggle('active',n===val);b.addEventListener('click',()=>updateCompareControl(group,k,n));t.appendChild(b);}wrapper.appendChild(t);}
-return wrapper;}
+function updateRangeBubble(input){
+ if(!input)return;
+ const bubble=input.parentElement.querySelector('.range-value');if(!bubble)return;
+ const val=Number(input.value),lo=Number(input.min),hi=Number(input.max),ratio=(val-lo)/(hi-lo);
+ const kind=input.dataset.kind||(/ph/i.test(input.id)?'ph':'temp');
+ bubble.textContent=valueLabel(kind,val);
+ // Slider thumb's usable center track starts approximately 9px from each edge.
+ const w=input.parentElement.clientWidth;
+ if(w>0){const raw=9+(w-18)*ratio;bubble.style.left=cap(raw,Math.min(27,w/2),Math.max(w-27,w/2))+'px';}
+ else bubble.style.left=cap(ratio*100,12,88)+'%';
+}
+function updateAllRangeBubbles(){document.querySelectorAll('.range-wrap input[type=range]').forEach(updateRangeBubble);}
+function freeControlChange(){free.temp=Number($('freeTemp').value);free.ph=Number($('freePH').value);updateRangeBubble($('freeTemp'));updateRangeBubble($('freePH'));addSample(vessels.free,'free',true);refreshInfo();paint(true);}
+function setToggle(id,key,val){if(experimentStarted)return;free[key]=val;for(const b of $(id+'Toggle').querySelectorAll('button'))b.classList.toggle('active',Number(b.dataset.value)===val);if(key==='subAmount'){for(const s of Object.keys(vessels.free.sub))adjustSubstrate(vessels.free,s,val);}addSample(vessels.free,'free',true);refreshInfo();paint(true);}
+function createControl(k,val,group){
+ const labels={temp:'溫度',ph:'酸鹼值',enzyme:'酵素量',substrate:'受質量'};
+ const wrapper=document.createElement('div');wrapper.className='controlblock compact-control';wrapper.dataset.key=k;
+ const head=document.createElement('div');head.className='controlhead';
+ const label=document.createElement('label');label.textContent=labels[k];head.appendChild(label);wrapper.appendChild(head);
+ if(k==='temp'||k==='ph'){
+  const slot=document.createElement('div');slot.className='range-wrap';
+  const output=document.createElement('output');output.className='range-value';output.textContent=valueLabel(k,val);
+  const input=document.createElement('input');input.type='range';input.min=0;input.max=k==='temp'?60:14;input.step=k==='temp'?1:0.5;input.value=val;input.dataset.kind=k;
+  if(k==='ph')input.classList.add('ph-slider');label.htmlFor='cmp_'+group+'_'+k;input.id=label.htmlFor;output.htmlFor=input.id;
+  input.addEventListener('input',()=>{updateRangeBubble(input);updateCompareControl(group,k,Number(input.value));});
+  slot.append(output,input);wrapper.appendChild(slot);
+ }else{
+  const t=document.createElement('div');t.className='toggle';
+  for(const n of [1,2]){const b=document.createElement('button');b.disabled=experimentStarted;b.textContent=n+' 倍';b.classList.toggle('active',n===val);b.addEventListener('click',()=>updateCompareControl(group,k,n));t.appendChild(b);}wrapper.appendChild(t);
+ }
+ return wrapper;
+}
 function updateCompareControl(group,k,val){if(experimentStarted&&k!=='temp'&&k!=='ph')return;if(group==='shared'){compare.shared[k]=val;}else{compare[group]=val;}
 if(k==='substrate'){const s=ENZ[compare.pair].species;for(const g of group==='shared'?['A','B']:[group])adjustSubstrate(vessels[g],s,settingsFor(g).substrate);}
 for(const g of ['A','B'])addSample(vessels[g],g,true);
 /* 改變滑桿時不得替換正在被手指拖曳的 DOM 節點。 */
-if(k==='temp'||k==='ph'){const target=$(group==='shared'?'compareShared':'compare'+group);const shown=target.querySelector(`[data-key="${k}"] .val`);if(shown)shown.textContent=valueLabel(k,val);}else{renderCompareSettings();}
+if(k==='temp'||k==='ph'){const target=$(group==='shared'?'compareShared':'compare'+group);const input=target.querySelector(`[data-key="${k}"] input[type=range]`);updateRangeBubble(input);}else{renderCompareSettings();}
 refreshInfo();paint(true);}
 function renderCompareSettings(){for(const g of ['A','B']){const node=$('compare'+g);node.replaceChildren(createControl(compare.variable,compare[g],g));}
-const common=$('compareShared');common.replaceChildren();for(const k of ['temp','ph','enzyme','substrate'])if(k!==compare.variable)common.appendChild(createControl(k,compare.shared[k],'shared'));updateLocks();}
+const common=$('compareShared');common.replaceChildren();for(const k of ['temp','ph','enzyme','substrate'])if(k!==compare.variable)common.appendChild(createControl(k,compare.shared[k],'shared'));updateLocks();requestAnimationFrame(updateAllRangeBubbles);}
 function setCompareVariable(k){if(experimentStarted)return;compare.variable=k;const baseline=compare.shared[k];compare.A=baseline;compare.B=k==='temp'?45:k==='ph'?Math.min(14,baseline+3):2;renderCompareSettings();resetSim();}
 function setPair(k){if(experimentStarted)return;compare.pair=k;compare.shared.ph=k==='pepsin'?2:7;const v=compare.variable;compare.A=compare.shared[v];compare.B=v==='temp'?45:v==='ph'?Math.min(14,compare.A+3):2;renderCompareSettings();resetSim();}
 function switchMode(m){if(mode===m||experimentStarted)return;mode=m;playing=false;simTime=0;$('freeControls').classList.toggle('hidden',mode!=='free');$('compareControls').classList.toggle('hidden',mode!=='compare');$('vesselWrapB').classList.toggle('hidden',mode!=='compare');$('modeFree').classList.toggle('active',mode==='free');$('modeCompare').classList.toggle('active',mode==='compare');$('modeFree').setAttribute('aria-selected',String(mode==='free'));$('modeCompare').setAttribute('aria-selected',String(mode==='compare'));$('stageTitle').textContent=mode==='free'?'反應模擬':'雙組反應';$('vesselTitleA').innerHTML=mode==='free'?'反應燒杯':'<span class="keyA"></span>A 組・對照組';resetSim();}
@@ -318,7 +374,7 @@ function drawShape(c,kind,x,y,size,fill,symbol,isProduct){
  c.beginPath();
  if(kind==='circle'){c.arc(0,0,size,0,Math.PI*2);}else if(kind==='triangle'){c.moveTo(0,-size*1.12);c.lineTo(size*1.11,size*.9);c.lineTo(-size*1.11,size*.9);c.closePath();}else{c.rect(-size,-size,size*2,size*2);}
  c.fill();c.stroke();c.fillStyle=isProduct?'#2c425d':'#fff';
- c.font=`800 ${symbol.length>1?6.9:9}px system-ui,sans-serif`;
+ c.font=`800 ${symbol.length>1?Math.min(6.4,size*.84):Math.min(9,size*(isProduct?1.14:1.04))}px system-ui,sans-serif`;
  c.textAlign='center';c.textBaseline='middle';c.fillText(symbol,0,kind==='triangle'?size*.11:0);
  c.restore();
 }
@@ -335,10 +391,40 @@ function drawEnzyme(c,k,x,y,angle,health){
  if(k==='liver'){c.fillStyle='white';c.font='700 8px system-ui';c.textAlign='center';c.textBaseline='middle';c.fillText('群',-6,0);}
  c.restore();
 }
+// Acid -> neutral -> alkaline water; intentionally pastel so molecular labels stay readable.
+function rgbOf(hex){return [1,3,5].map(i=>parseInt(hex.slice(i,i+2),16));}
+function blendHex(a,b,t){const aa=rgbOf(a),bb=rgbOf(b);return `rgb(${aa.map((v,i)=>Math.round(v*(1-t)+bb[i]*t)).join(',')})`;}
+function waterColor(ph){return ph<=7?blendHex('#ef9da9','#cbece9',ph/7):blendHex('#cbece9','#80b4ec',(ph-7)/7);}
+function ease(t){return t*t*(3-2*t);}
+function drawReactionEvent(c,ev,v,spot,activityFactor){
+ const key=ev.key,d=SPECIES[ev.s],ei=v.enzs.indexOf(key);
+ if(ei<0)return;
+ const index=ev.slot; // deterministic enzyme assignment for repeated events
+ const num=Number(settingsFor(v===vessels.free?'free':v===vessels.A?'A':'B').enzyme)===2?4:2;
+ const enzIndex=index%num;
+ const [ex,ey]=spot(enzIndex+13,ei*17+27,activityFactor);
+ const u=cap((v.elapsed-ev.start)/ev.duration,0,1);
+ const dockX=ex+11,dockY=ey;
+ c.save();
+ if(u<.61){
+  const t=ease(cap(u/.32,0,1));
+  const x=dockX+(1-t)*26, y=dockY+(1-t)*(ev.slot%2?14:-13);
+  if(u>=.30){c.beginPath();c.arc(dockX,dockY,12.6,0,Math.PI*2);c.strokeStyle='rgba(255,255,255,.95)';c.lineWidth=1.7;c.stroke();}
+  drawShape(c,d.shape,x,y,8.25,d.color,d.symbol,false);
+ }else{
+  const t=ease((u-.61)/.39),r=(d.shape==='square'?7.6:d.shape==='triangle'?6.5:6.0);
+  // The transformation of starch or protein visibly gives smaller pieces.
+  const count=d.shape==='square'?1:2;
+  for(let i=0;i<count;i++){
+   const dy=count===2?(i?1:-1):0;
+   drawShape(c,d.shape,dockX+3+t*(24+i*8),dockY+dy*(3+t*15),r,d.prodColor,d.productSymbol,true);
+  }
+ }
+ c.restore();
+}
 function drawBeaker(group,t){
  const canvas=$(group==='B'?'beakerB':'beakerA');if(!canvas)return;
  const v=vessels[group],p=settingsFor(group),single=mode==='free';
- // Single beaker returns to a familiar, moderately narrow laboratory silhouette.
  const W=single?230:170,H=230,dpr=Math.min(window.devicePixelRatio||1,2);
  const scale=Math.max(1,Math.min((canvas.clientWidth||W)/W,(canvas.clientHeight||H)/H));
  const bw=Math.round(W*dpr*scale),bh=Math.round(H*dpr*scale);
@@ -347,27 +433,37 @@ function drawBeaker(group,t){
  const x=single?23:17,y=15,w=single?184:136,h=196,r=19;
  c.save();c.beginPath();c.moveTo(x,y);c.lineTo(x,y+h-r);c.quadraticCurveTo(x,y+h,x+r,y+h);
  c.lineTo(x+w-r,y+h);c.quadraticCurveTo(x+w,y+h,x+w,y+h-r);c.lineTo(x+w,y);c.closePath();c.clip();
- const grad=c.createLinearGradient(x,y,x+w,y+h);grad.addColorStop(0,group==='B'?'#fff0de':'#eaf4ff');grad.addColorStop(1,group==='B'?'#ffe0b6':'#d8f3ee');
+ const base=waterColor(p.ph),grad=c.createLinearGradient(x,y,x+w,y+h);
+ const neutral='#f8fcff';grad.addColorStop(0,blendHex('#f8fcff',p.ph<7?'#ffd0d3':'#c2ddff',Math.abs(p.ph-7)/15));
+ grad.addColorStop(.34,blendHex('#f8fcff',p.ph<7?'#ffabb6':'#80b4ec',Math.abs(p.ph-7)/10));
+ grad.addColorStop(1,base);
  c.fillStyle=grad;c.fillRect(x,y,w,h);
- c.strokeStyle='#a3cfe6';c.lineWidth=1.8;c.beginPath();c.moveTo(x,y+41);c.quadraticCurveTo(x+w/2,y+46,x+w,y+41);c.stroke();
+ c.strokeStyle=p.ph<6?'#e8a0aa':p.ph>8?'#91b4e2':'#a3cfe6';c.lineWidth=1.8;c.beginPath();c.moveTo(x,y+41);c.quadraticCurveTo(x+w/2,y+46,x+w,y+41);c.stroke();
  const rx=x+16,ry=y+60,rw=w-34,rh=h-86;
  const spot=(i,seed,a)=>{const [px,py]=particlePos(i,t,seed,a);return [rx+px*rw,ry+py*rh];};
- const substrateKeys=Object.keys(v.sub);
- for(let j=0;j<substrateKeys.length;j++){
-  const s=substrateKeys[j],d=SPECIES[s];
-  // Keep text labels legible even in two-beaker mode by limiting symbolic counts.
-  const subs=Math.min(9,Math.ceil(Math.max(0,v.sub[s])/17));
+ const activityFactor=temperatureFactor(p.temp);
+ const keys=Object.keys(v.sub);
+ // Non-bound particles drift independently.
+ for(let j=0;j<keys.length;j++){
+  const s=keys[j],d=SPECIES[s];
+  const activeCount=v.visualEvents.filter(ev=>ev.s===s&&(v.elapsed-ev.start)/ev.duration<.61).length;
+  const subs=Math.max(0,Math.min(9,Math.ceil(Math.max(0,v.sub[s])/17))-activeCount);
   const prods=Math.min(9,Math.ceil(Math.max(0,v.prod[s]||0)/17));
-  for(let i=0;i<subs;i++){const [px,py]=spot(i,j*11+3,temperatureFactor(p.temp));drawShape(c,d.shape,px,py,8.3,d.color,d.symbol,false);}
-  for(let i=0;i<prods;i++){const [px,py]=spot(i+30,j*13+19,temperatureFactor(p.temp));drawShape(c,d.shape,px,py,8.5,d.prodColor,d.productSymbol,true);}
+  for(let i=0;i<subs;i++){const [px,py]=spot(i,j*11+3,activityFactor);drawShape(c,d.shape,px,py,8.3,d.color,d.symbol,false);}
+  // Product molecules are clearly smaller than the substrates for starch/protein.
+  const pr=d.shape==='circle'?6.0:d.shape==='triangle'?6.5:7.6;
+  for(let i=0;i<prods;i++){const [px,py]=spot(i+30,j*13+19,activityFactor);drawShape(c,d.shape,px,py,pr,d.prodColor,d.productSymbol,true);}
  }
  for(let j=0;j<v.enzs.length;j++){
   const k=v.enzs[j],num=p.enzyme===2?4:2;
   for(let i=0;i<num;i++){
-   const [px,py]=spot(i+13,j*17+27,temperatureFactor(p.temp));
-   drawEnzyme(c,k,px,py,Math.sin(t*.36+i)*.2,v.health[k]);
+   const [px,py]=spot(i+13,j*17+27,activityFactor);
+   // Keep the binding notch pointed toward the incoming substrate.
+   drawEnzyme(c,k,px,py,Math.sin(t*.36+i)*.11,v.health[k]);
   }
  }
+ // Substrate approaches the correct notch, docks, changes, then small products separate.
+ for(const ev of v.visualEvents)drawReactionEvent(c,ev,v,spot,activityFactor);
  c.restore();
  c.beginPath();c.moveTo(x,y);c.lineTo(x,y+h-r);c.quadraticCurveTo(x,y+h,x+r,y+h);
  c.lineTo(x+w-r,y+h);c.quadraticCurveTo(x+w,y+h,x+w,y+h-r);c.lineTo(x+w,y);
@@ -444,10 +540,10 @@ $('resetBtn').addEventListener('click',resetSim);
 $('helpBtn').addEventListener('click',()=>$('helpDialog').showModal());
 $('closeHelp').addEventListener('click',()=>$('helpDialog').close());
 $('dismissHint').addEventListener('click',()=>$('portraitHint').classList.add('hidden'));
-for(const t of document.querySelectorAll('.view-tab'))t.addEventListener('click',()=>{activeView=t.dataset.view;document.body.dataset.view=activeView;for(const b of document.querySelectorAll('.view-tab'))b.classList.toggle('active',b===t);requestAnimationFrame(()=>paint(true));});
+for(const t of document.querySelectorAll('.view-tab'))t.addEventListener('click',()=>{activeView=t.dataset.view;document.body.dataset.view=activeView;for(const b of document.querySelectorAll('.view-tab'))b.classList.toggle('active',b===t);requestAnimationFrame(()=>{updateAllRangeBubbles();paint(true);});});
 const hint=window.matchMedia('(orientation: portrait)');let hintDismissed=false;function showHint(){if(hint.matches&&!hintDismissed)$('portraitHint').classList.remove('hidden');else $('portraitHint').classList.add('hidden');}showHint();hint.addEventListener('change',showHint);$('dismissHint').addEventListener('click',()=>{hintDismissed=true;});
 }
-document.body.dataset.view=activeView;bind();renderCompareSettings();resetSim();window.addEventListener('resize',()=>paint(true),{passive:true});requestAnimationFrame(loop);
+document.body.dataset.view=activeView;bind();renderCompareSettings();resetSim();window.addEventListener('resize',()=>{updateAllRangeBubbles();paint(true);},{passive:true});requestAnimationFrame(updateAllRangeBubbles);requestAnimationFrame(loop);
 </script>
 </body>
 </html>
