@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#eaf2ff">
-<title>酵素實驗室 2.4｜連續碰撞反應版</title>
+<title>酵素實驗室 2.5｜雙槽肝酵素修正版</title>
 <style>
 :root{--ink:#172642;--muted:#64748b;--line:#dfe8f3;--bg:#f4f7fc;--white:#fff;--blue:#4263eb;--orange:#ef8b36;--green:#0d9c83;--red:#e65766;--navy:#254268;--shadow:0 12px 34px rgba(47,76,126,.08)}
 *{box-sizing:border-box}html,body{min-height:100%;margin:0}body{font-family:system-ui,-apple-system,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:var(--ink);background:var(--bg);-webkit-tap-highlight-color:transparent}button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #8da8ff;outline-offset:2px}button:disabled{opacity:.5;cursor:not-allowed} .shell{max-width:1650px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;padding:14px 17px;gap:12px}
@@ -175,7 +175,7 @@ input.ph-slider::-moz-range-thumb{height:15px;width:15px;background:#fff;border:
 <body>
 <div class="shell">
 <header>
- <div class="brand"><div class="logo" aria-hidden="true">🧪</div><div><h1>酵素實驗室 <span style="color:#5571de">2.4</span></h1></div></div>
+ <div class="brand"><div class="logo" aria-hidden="true">🧪</div><div><h1>酵素實驗室 <span style="color:#5571de">2.5</span></h1></div></div>
  <div class="tabs" role="tablist" aria-label="操作模式"><button id="modeFree" class="tab active" role="tab" aria-selected="true">✨ 自由探索</button><button id="modeCompare" class="tab" role="tab" aria-selected="false">⚖️ 雙組對照實驗</button></div>
  <button type="button" class="help-button" id="helpBtn" aria-label="說明">？</button>
 </header>
@@ -235,10 +235,10 @@ input.ph-slider::-moz-range-thumb{height:15px;width:15px;background:#fff;border:
 </div>
 <script>
 'use strict';
-/* 酵素實驗室 2.4：獨立、無第三方依賴，持續運動與真正接觸結合的教學模型。 */
-const SPECIES={starch:{label:'澱粉',color:'#e65362',product:'較小的醣類',symbol:'澱',productSymbol:'醣',shape:'circle',enz:'saliva',prodColor:'#ffb1b5'},protein:{label:'蛋白質',color:'#4477db',product:'較短的胺基酸鏈',symbol:'蛋',productSymbol:'胺',shape:'triangle',enz:'pepsin',prodColor:'#aac6ff'},ammonia:{label:'氨',color:'#159b91',product:'尿素',symbol:'氨',productSymbol:'尿素',shape:'square',enz:'liver',prodColor:'#9be5d8'}};
+/* 酵素實驗室 2.5：雙槽肝酵素、連續碰撞與配色修正版。 */
+const SPECIES={starch:{label:'澱粉',color:'#e65362',product:'較小的醣類',symbol:'澱',productSymbol:'醣',shape:'circle',enz:'saliva',prodColor:'#ffb1b5',subSize:8.3,prodSize:6,productCount:2},protein:{label:'蛋白質',color:'#4477db',product:'較短的胺基酸鏈',symbol:'蛋',productSymbol:'胺',shape:'triangle',enz:'pepsin',prodColor:'#aac6ff',subSize:8.3,prodSize:5.6,productCount:2},ammonia:{label:'氨',color:'#159b91',product:'尿素',symbol:'氨',productSymbol:'尿素',shape:'square',enz:'liver',prodColor:'#8fd7c8',subSize:6.2,prodSize:9.2,productCount:1}};
 const SIM_DURATION=30, STANDARD_FINISH_TIME=25, SIM_SPEED=1.8;
-const ENZ={saliva:{label:'唾液澱粉酶',opt:7,phWidth:2.15,color:'#18a16f',species:'starch'},pepsin:{label:'胃蛋白酶',opt:2,phWidth:1.9,color:'#885cd4',species:'protein'},liver:{label:'肝臟多種酵素',opt:7,phWidth:2.4,color:'#16887b',species:'ammonia'}};
+const ENZ={saliva:{label:'唾液澱粉酶',opt:7,phWidth:2.15,color:'#18a16f',species:'starch'},pepsin:{label:'胃蛋白酶',opt:2,phWidth:1.9,color:'#885cd4',species:'protein'},liver:{label:'肝臟多種酵素',opt:7,phWidth:2.4,color:'#c88719',species:'ammonia'}};
 const $=id=>document.getElementById(id);
 const cap=(n,a,b)=>Math.max(a,Math.min(b,n));
 const round=n=>Math.round(n*10)/10;
@@ -288,6 +288,16 @@ function spawnMoving(kind,s,x,y,speed){
  const angle=2*Math.PI*pseudoRandom(nextParticleId*1.77+14);
  return {id:nextParticleId++,kind,s,x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,bind:null};
 }
+
+function enzymeSlotOffsets(key){
+ if(key==='liver')return [{x:11,y:-7},{x:11,y:7}];
+ return [{x:11,y:0}];
+}
+function enzymeSlotPos(en,slot){const o=(en.slotOffsets||enzymeSlotOffsets(en.key))[slot]||{x:11,y:0};return {x:en.x+o.x,y:en.y+o.y};}
+function hasFreeSlot(en){return (en.busySlots||[]).some(v=>v===null);}
+function firstFreeSlot(en){return (en.busySlots||[]).findIndex(v=>v===null);}
+function slotCount(en){return (en.busySlots||[]).length||1;}
+
 function initializeVisual(v,group){
  const b=visualBounds(group),molecules=[],enzymes=[];
  const used=[];
@@ -306,7 +316,7 @@ function initializeVisual(v,group){
   for(let i=0;i<groupSettings.enzyme*2;i++){
    const pos=place(14);pos.x=Math.min(pos.x,b.enzMaxX);
    const en=spawnMoving('enz',k,pos.x,pos.y,7.5);
-   en.busy=null;en.key=k;enzymes.push(en);
+   en.key=k;en.slotOffsets=enzymeSlotOffsets(k);en.busySlots=new Array(en.slotOffsets.length).fill(null);en.reactionAge=0;enzymes.push(en);
   }
  }
  for(const s of Object.keys(v.sub)){
@@ -328,69 +338,98 @@ function moveParticle(p,dt,b,mobility,radius=7){
  if(p.y>b.maxY-radius){p.y=b.maxY-radius;p.vy=-Math.abs(p.vy);}
 }
 function makeRelease(v,m,e){
- const d=SPECIES[m.s],count=d.shape==='square'?1:2;
- m.kind='prod';m.bind=null;
- m.x=e.x+15;m.y=e.y;
- m.vx=22;m.vy=count===2?-13:8;
+ const d=SPECIES[m.s],count=d.productCount||1,release=enzymeSlotPos(e,0);
+ m.kind='prod';m.bind=null;m.removed=false;
+ m.x=release.x+8;m.y=release.y;
+ m.vx=18;m.vy=count===2?-12:2;
  for(let i=1;i<count;i++){
-  const extra=spawnMoving('prod',m.s,m.x,m.y,24);
-  extra.vx=21;extra.vy=13;
+  const extra=spawnMoving('prod',m.s,m.x,m.y,22);
+  extra.vx=17;extra.vy=12;
   v.visual.molecules.push(extra);
  }
- e.busy=null;v.visual.releaseCount++;
+ if(e.key==='liver'){
+  const others=sceneBoundMolecules(v,e).filter(x=>x!==m);
+  for(const other of others){other.removed=true;other.bind=null;}
+ }
+ e.busySlots=e.busySlots.map(()=>null);e.reactionAge=0;v.visual.releaseCount++;
 }
+function sceneBoundMolecules(v,e){return v.visual.molecules.filter(mm=>mm.bind&&mm.bind.enzyme===e&&!mm.removed);}
 function simulateVisual(v,group,dt){
  if(!v.visual)return;
  const p=settingsFor(group),b=visualBounds(group),scene=v.visual;
  const mobility=.62+.78*cap(p.temp/50,0,1);
- // The enzymes have physical positions and drift independently.
- for(const e of scene.enzymes){if(!e.busy)moveParticle(e,dt,b,mobility,14);}
+ for(const e of scene.enzymes){
+  if((e.busySlots||[]).every(s=>s===null))moveParticle(e,dt,b,mobility,14);
+ }
  for(const m of scene.molecules){
+  if(m.removed)continue;
   if(m.kind==='prod'){moveParticle(m,dt,b,mobility,6);continue;}
   if(m.kind!=='sub')continue;
   if(m.bind){
-   const state=m.bind,e=state.enzyme;
+   const state=m.bind,e=state.enzyme,pos=enzymeSlotPos(e,state.slot);
    state.age+=dt;
    const u=cap(state.age/.28,0,1),k=u*u*(3-2*u);
-   // First approach the docking site continuously, then hold the bond briefly.
-   m.x=state.fromX+(e.x+11-state.fromX)*k;
-   m.y=state.fromY+(e.y-state.fromY)*k;
-   if(state.age>=.70)makeRelease(v,m,e);
+   m.x=state.fromX+(pos.x-state.fromX)*k;
+   m.y=state.fromY+(pos.y-state.fromY)*k;
+   if(e.key!=='liver' && state.age>=.70)makeRelease(v,m,e);
    continue;
   }
-  // Brownian-like movement, wall rebounds. Slight local attraction only nearby.
-  const matching=scene.enzymes.filter(e=>e.key===SPECIES[m.s].enz&&!e.busy);
-  if(matching.length&&v.visualCredit[m.s]>=MOLECULE_PACKET*.94){
-   let closest=null,dist=Infinity;
-   for(const e of matching){const d=Math.hypot(e.x+11-m.x,e.y-m.y);if(d<dist){dist=d;closest=e;}}
+  const matching=scene.enzymes.filter(e=>e.key===SPECIES[m.s].enz && hasFreeSlot(e));
+  const threshold=(m.s==='ammonia'?MOLECULE_PACKET*1.88:MOLECULE_PACKET*.94);
+  if(matching.length && (v.visualCredit[m.s]||0)>=threshold){
+   let closest=null,dist=Infinity,slot=-1;
+   for(const e of matching){
+    const idx=firstFreeSlot(e); if(idx<0) continue;
+    const pos=enzymeSlotPos(e,idx);
+    const d=Math.hypot(pos.x-m.x,pos.y-m.y);
+    if(d<dist){dist=d;closest=e;slot=idx;}
+   }
    const progress=cap((v.prod[m.s]||0)/(v.initial[m.s]||100),0,1);
-   const attractRadius=62+58*progress;
+   const attractRadius=(m.s==='ammonia'?52:62)+(m.s==='ammonia'?36:58)*progress;
    if(closest&&dist<attractRadius){
-    const strength=cap((attractRadius-dist)/(attractRadius-15),0,1);
-    const ux=(closest.x+11-m.x)/(dist||1),uy=(closest.y-m.y)/(dist||1);
-    m.vx+=ux*dt*(11+40*strength)*(1+progress);
-    m.vy+=uy*dt*(11+40*strength)*(1+progress);
+    const pos=enzymeSlotPos(closest,slot);
+    const strength=cap((attractRadius-dist)/(attractRadius-12),0,1);
+    const ux=(pos.x-m.x)/(dist||1),uy=(pos.y-m.y)/(dist||1);
+    m.vx+=ux*dt*(10+36*strength)*(1+progress);
+    m.vy+=uy*dt*(10+36*strength)*(1+progress);
     const sp=Math.hypot(m.vx,m.vy);
     if(sp>39){m.vx=m.vx/sp*39;m.vy=m.vy/sp*39;}
    }
   }
-  moveParticle(m,dt,b,mobility,8);
-  // Interaction starts only after actual contact with the correct enzyme's notch.
-  if(v.visualCredit[m.s]>=MOLECULE_PACKET*.94){
+  moveParticle(m,dt,b,mobility,m.s==='ammonia'?6.2:8);
+  if((v.visualCredit[m.s]||0)>=threshold){
    for(const e of matching){
-    if(e.busy)continue;
-    const dist=Math.hypot(m.x-(e.x+11),m.y-e.y);
-    if(dist<16){
-     const state={enzyme:e,fromX:m.x,fromY:m.y,age:0};
-     m.bind=state;e.busy=m.id;
-     v.visualCredit[m.s]=Math.max(0,v.visualCredit[m.s]-MOLECULE_PACKET);
-     scene.bindingStarts++;
-     break;
+    const idx=firstFreeSlot(e); if(idx<0) continue;
+    const pos=enzymeSlotPos(e,idx);
+    const dist=Math.hypot(m.x-pos.x,m.y-pos.y);
+    if(dist<14){
+      const state={enzyme:e,slot:idx,fromX:m.x,fromY:m.y,age:0};
+      m.bind=state; e.busySlots[idx]=m.id;
+      if(m.s==='ammonia')v.visualCredit[m.s]=Math.max(0,(v.visualCredit[m.s]||0)-MOLECULE_PACKET*.94);
+      else v.visualCredit[m.s]=Math.max(0,(v.visualCredit[m.s]||0)-MOLECULE_PACKET);
+      scene.bindingStarts++;
+      break;
     }
    }
   }
  }
+ for(const e of scene.enzymes){
+   if(e.key!=='liver')continue;
+   const bound=sceneBoundMolecules(v,e);
+   if(bound.length===2 && bound.every(m=>m.bind&&m.bind.age>=.28)){
+     e.reactionAge=(e.reactionAge||0)+dt;
+     if(e.reactionAge>=.34){
+       // Spend the second packet only at successful paired synthesis.
+       v.visualCredit['ammonia']=Math.max(0,(v.visualCredit['ammonia']||0)-MOLECULE_PACKET*.94);
+       makeRelease(v,bound[0],e);
+     }
+   } else if(bound.length<2){
+     e.reactionAge=0;
+   }
+ }
+ scene.molecules=scene.molecules.filter(m=>!m.removed);
 }
+
 function simulate(v,group,dt){
  const p=settingsFor(group);
  for(const k of v.enzs){v.health[k]=Math.max(0,v.health[k]-dt*heatDamagePerSecond(p.temp));}
@@ -488,17 +527,20 @@ function drawShape(c,kind,x,y,size,fill,symbol,isProduct){
  c.beginPath();
  if(kind==='circle'){c.arc(0,0,size,0,Math.PI*2);}else if(kind==='triangle'){c.moveTo(0,-size*1.12);c.lineTo(size*1.11,size*.9);c.lineTo(-size*1.11,size*.9);c.closePath();}else{c.rect(-size,-size,size*2,size*2);}
  c.fill();c.stroke();c.fillStyle=isProduct?'#2c425d':'#fff';
- c.font=`800 ${symbol.length>1?Math.min(6.4,size*.84):Math.min(9,size*(isProduct?1.14:1.04))}px system-ui,sans-serif`;
+ c.font=`800 ${symbol.length>1?Math.min(6.2,size*.78):Math.min(9,size*(isProduct?1.14:1.04))}px system-ui,sans-serif`;
  c.textAlign='center';c.textBaseline='middle';c.fillText(symbol,0,kind==='triangle'?size*.11:0);
  c.restore();
 }
 function drawEnzyme(c,k,x,y,angle,health){
- // The inward-facing notch corresponds to the substrate's circle, triangle or square.
  const s=SPECIES[ENZ[k].species],m=s.shape;
  c.save();c.translate(x,y);c.rotate(angle);c.beginPath();
  c.moveTo(-12,-12);c.quadraticCurveTo(-15,-8,-13,-3);c.lineTo(-13,8);c.quadraticCurveTo(-11,13,-7,13);c.lineTo(8,13);c.quadraticCurveTo(13,13,13,9);
- if(m==='circle'){c.lineTo(13,7);c.bezierCurveTo(0,7,0,-7,13,-7);}
- else if(m==='triangle'){c.lineTo(13,7);c.lineTo(-2,0);c.lineTo(13,-7);}
+ if(k==='liver'){
+  c.lineTo(13,9); c.lineTo(13,6); c.lineTo(4,6); c.lineTo(4,2); c.lineTo(10,2);
+  c.lineTo(10,-2); c.lineTo(4,-2); c.lineTo(4,-6); c.lineTo(13,-6); c.lineTo(13,-9);
+ }
+ else if(m==='circle'){c.lineTo(13,7);c.bezierCurveTo(0,7,0,-7,13,-7);}
+ else if(m==='triangle'){c.lineTo(13,8);c.lineTo(-4,0);c.lineTo(13,-8);}
  else{c.lineTo(13,7);c.lineTo(0,7);c.lineTo(0,-7);c.lineTo(13,-7);}
  c.lineTo(13,-9);c.quadraticCurveTo(13,-13,8,-13);c.closePath();
  c.globalAlpha=.64+.34*health;c.fillStyle=ENZ[k].color;c.fill();c.strokeStyle=health<.35?'#e65766':'white';c.lineWidth=1.6;c.stroke();
@@ -532,18 +574,19 @@ function drawBeaker(group,t){
   for(const m of scene.molecules){
    if(m.bind)continue;
    const d=SPECIES[m.s],isProduct=m.kind==='prod';
-   const sz=isProduct?(d.shape==='circle'?6:d.shape==='triangle'?6.5:7.6):8.3;
+   const sz=isProduct?(d.prodSize||6):(d.subSize||8.3);
    drawShape(c,d.shape,m.x,m.y,sz,isProduct?d.prodColor:d.color,isProduct?d.productSymbol:d.symbol,isProduct);
   }
   for(const en of scene.enzymes){
    drawEnzyme(c,en.key,en.x,en.y,0,v.health[en.key]);
-   if(en.busy){
-    c.beginPath();c.arc(en.x+11,en.y,11,0,Math.PI*2);
-    c.strokeStyle='rgba(255,255,255,.72)';c.lineWidth=1.3;c.stroke();
+   const occupied=(en.busySlots||[]).filter(v=>v!==null);
+   if(occupied.length){
+    for(let i=0;i<(en.slotOffsets||[]).length;i++){ if((en.busySlots||[])[i]===null) continue; const pos=enzymeSlotPos(en,i);
+      c.beginPath();c.arc(pos.x,pos.y,9.5,0,Math.PI*2); c.strokeStyle='rgba(255,255,255,.72)'; c.lineWidth=1.2; c.stroke();}
    }
   }
   for(const m of scene.molecules){
-   if(m.bind){const d=SPECIES[m.s];drawShape(c,d.shape,m.x,m.y,8.3,d.color,d.symbol,false);}
+   if(m.bind){const d=SPECIES[m.s];drawShape(c,d.shape,m.x,m.y,d.subSize||8.3,d.color,d.symbol,false);}
   }
  }
  c.restore();
